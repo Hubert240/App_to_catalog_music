@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<header>
+    <span class="title">Playlist</span>
+
+    <a href="" class="konto">
+    <div>
+        <span>Konto</span>
+    </div>
+    </a>
+</header>
+
+<div class="main-content">
+    <div class="song">
+        <p class="song-name" th:text="${song.name}"></p>
+        <img src="https://muzikercdn.com/uploads/products/10521/1052154/e7aed8a5.jpg">
+        <div>
+        <span>Cena: </span>
+        <span>666</span>
+        <span>zł</span>
+    </div>
+
+    <a href="" class='add-btn'>Dodaj</a>
+        </div>
+
+
+
+</div>
+</body>
+</html>
