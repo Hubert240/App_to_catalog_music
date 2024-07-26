@@ -30,9 +30,10 @@ public class AudioController {
 
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, Model model) throws IOException {
+    public String uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("artist") String artist, Model model) throws IOException {
         Audio audio = new Audio();
         audio.setName(file.getOriginalFilename());
+        audio.setArtist(artist);
         audio.setFile(file.getBytes());
         audioRepository.save(audio);
         model.addAttribute("message", "File uploaded successfully!");
@@ -67,18 +68,6 @@ public class AudioController {
         model.addAttribute("fileName", audio.getName());
         model.addAttribute("fileId", id);
         return "playFile";
-    }
-
-
-
-
-    @GetMapping("/{id}")
-    public String getFile(@PathVariable Long id, Model model) {
-        Audio audio = audioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("File not found"));
-        System.out.println("File Entity: " + audio);
-        model.addAttribute("file", audio);
-        return "play";
     }
 
 

@@ -15,6 +15,7 @@ public class Audio {
     private Long id;
 
     private String name;
+    private String artist;
 
     @Lob
     private byte[] file;
