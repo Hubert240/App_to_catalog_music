@@ -56,23 +56,11 @@ public class AuthController {
     }
 
 
-    @GetMapping("/users")
-    public String users(Model model){
-        List<UserDto> users = userService.findAllUsers();
-        model.addAttribute("users", users);
-        return "users";
-    }
-
     @GetMapping("/login")
     public String login(){
         return "login";
     }
 
 
-
-    public User getCurrentUser() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(userEmail);
-    }
 
 }
