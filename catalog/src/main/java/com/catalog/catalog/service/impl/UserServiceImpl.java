@@ -6,6 +6,7 @@ import com.catalog.catalog.model.User;
 import com.catalog.catalog.repository.RoleRepository;
 import com.catalog.catalog.repository.UserRepository;
 import com.catalog.catalog.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,4 +71,9 @@ public class UserServiceImpl implements UserService {
         return roleRepository.save(role);
     }
 
+
+    public User getCurrentUser() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(userEmail);
+    }
 }

@@ -4,8 +4,11 @@ import javax.validation.Valid;
 
 import com.catalog.catalog.dto.UserDto;
 import com.catalog.catalog.model.User;
+import com.catalog.catalog.repository.UserRepository;
 import com.catalog.catalog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
     @GetMapping("/index")
     public String index(){
         return "index";
@@ -60,6 +66,13 @@ public class AuthController {
     @GetMapping("/login")
     public String login(){
         return "login";
+    }
+
+
+
+    public User getCurrentUser() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(userEmail);
     }
 
 }

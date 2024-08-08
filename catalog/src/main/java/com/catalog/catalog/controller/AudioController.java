@@ -2,7 +2,9 @@ package com.catalog.catalog.controller;
 
 
 import com.catalog.catalog.model.Audio;
+import com.catalog.catalog.model.User;
 import com.catalog.catalog.repository.AudioRepository;
+import com.catalog.catalog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -23,6 +25,9 @@ public class AudioController {
     @Autowired
     private AudioRepository audioRepository;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/newSong")
     public String index() {
         return "newSong";
@@ -31,10 +36,12 @@ public class AudioController {
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("artist") String artist, Model model) throws IOException {
+        User currentUser = userService.getCurrentUser();
         Audio audio = new Audio();
         audio.setName(file.getOriginalFilename());
         audio.setArtist(artist);
         audio.setFile(file.getBytes());
+        audio.setUser(currentUser);
         audioRepository.save(audio);
         model.addAttribute("message", "File uploaded successfully!");
         return "newSong";
