@@ -1,6 +1,5 @@
 package com.catalog.catalog.security;
 
-import com.catalog.catalog.model.Role;
 import com.catalog.catalog.model.User;
 import com.catalog.catalog.repository.UserRepository;
 import org.hibernate.annotations.DialectOverride;
@@ -12,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,17 +29,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if(user != null){
             return new org.springframework.security.core.userdetails.User(user.getEmail(),
-                    user.getPassword(),mapRolesToAuthorities(user.getRoles()));
+                    user.getPassword(),getAuthorities());
         }else{
             throw new UsernameNotFoundException("Niepoprawne dane");
         }
     }
-
-
-    private Collection< ? extends GrantedAuthority> mapRolesToAuthorities(Collection <Role> roles) {
-        Collection < ? extends GrantedAuthority> mapRoles = roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
-        return mapRoles;
+    private Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
     }
+
 }

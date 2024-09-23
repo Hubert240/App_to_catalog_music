@@ -1,9 +1,7 @@
-package com.catalog.catalog.service.impl;
+package com.catalog.catalog.service;
 
 import com.catalog.catalog.dto.UserDto;
-import com.catalog.catalog.model.Role;
 import com.catalog.catalog.model.User;
-import com.catalog.catalog.repository.RoleRepository;
 import com.catalog.catalog.repository.UserRepository;
 import com.catalog.catalog.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +16,10 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -34,11 +30,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_ADMIN");
-        if(role == null){
-            role = checkRoleExist();
-        }
-        user.setRoles(Arrays.asList(role));
         userRepository.save(user);
     }
 
@@ -65,11 +56,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private Role checkRoleExist(){
-        Role role = new Role();
-        role.setName("ROLE_ADMIN");
-        return roleRepository.save(role);
-    }
 
 
     public User getCurrentUser() {
