@@ -1,65 +1,62 @@
 package com.catalog.catalog.service;
 
-import com.catalog.catalog.dto.UserDto;
-import com.catalog.catalog.model.User;
+import com.catalog.catalog.exception.UserNotFoundException;
 import com.catalog.catalog.repository.UserRepository;
-import com.catalog.catalog.service.UserService;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.catalog.catalog.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public void saveUser(UserDto userDto){
-        User user = new User();
-        user.setName(userDto.getFirstName() + " "+ userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        userRepository.save(user);
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
-    public User findUserByEmail(String email){
-        return userRepository.findByEmail(email);
+    public boolean hasUserWithUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     @Override
-    public List<UserDto> findAllUsers(){
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .map((user) -> mapToUserDto(user))
-                .collect(Collectors.toList());
+    public boolean hasUserWithEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
-    private UserDto mapToUserDto(User user){
-        UserDto userDto = new UserDto();
-        String[] str = user.getName().split(" ");
-        userDto.setFirstName(str[0]);
-        userDto.setLastName(str[1]);
-        userDto.setEmail((user.getEmail()));
-        return userDto;
-
+    @Override
+    public User validateAndGetUserByUsername(String username) {
+        return getUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
     }
 
+    @Override
+    public User saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
 
+    @Override
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
 
-    public User getCurrentUser() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(userEmail);
+    @Override
+    public Optional<User> validUsernameAndPassword(String username, String password) {
+        return getUserByUsername(username)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
     }
 }
