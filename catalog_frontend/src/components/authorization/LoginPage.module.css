@@ -1,0 +1,45 @@
+.container {
+    width: 400px;
+    height: 280px;
+    margin: 0 auto;
+    margin-top: 10%;
+    padding: 20px;
+    background-color: #202020;
+    border-radius: 15px;
+    }
+
+.heading{
+    text-align: center;
+}
+
+
+.loginLabel{
+    display:block;
+    margin-bottom: 15px;
+    font-weight: bolder;
+}
+
+.loginButton{
+    background-color: black;
+    color:white;
+    cursor: pointer;
+    transition: background-color 0.4 ease;
+    padding: 3%;
+    border-radius: 10px;
+    width: 100%;
+    font-weight: bolder;
+    border: none;
+
+}
+
+.loginButton:hover{
+    background-color: #2b2a2a;
+}
+
+.inputField{
+width: 95%;
+padding: 10px;
+border: 1px solid #ffffff;
+border-radius: 5px;
+margin-bottom: 30px;
+}

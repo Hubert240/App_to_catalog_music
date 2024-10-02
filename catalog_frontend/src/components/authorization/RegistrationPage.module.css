@@ -1,0 +1,46 @@
+.container{
+    width: 400px;
+    height: 400px;
+    background-color: #202020;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 10%;
+    border-radius: 15px;
+
+}
+
+.heading{
+    text-align: center;
+}
+
+
+.registrationLabel{
+    display:block;
+    margin-bottom: 15px;
+    font-weight: bolder;
+
+}
+
+.registrationButton{
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    width:100%;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+    transition: background-color 0.4 ease;
+    margin-top: 10px;
+    border: none;
+}
+
+.registrationButton:hover{
+    background-color: #575757;
+}
+
+.inputField{
+    margin-bottom: 10px;
+    border-radius: 10px;
+    width: 95%;
+    padding: 10px;
+}

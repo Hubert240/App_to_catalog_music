@@ -1,0 +1,40 @@
+nav {
+    background: rgba(0,0,0,0.1);
+    padding: 10px 0;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    }
+
+.link-button {
+    color: white;
+    padding: 1000px;
+    border-radius: 5px;
+    text-decoration: none;
+    }
+
+
+  ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  }
+  
+  li {
+  display: inline-block;
+  margin: 0 15px;
+  }
+  
+  a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 15px;
+  transition: background-color 0.4s ease;
+  }
+  
+  a:hover {
+  background-color: #252525;
+  color: #ebebeb;
+  }
