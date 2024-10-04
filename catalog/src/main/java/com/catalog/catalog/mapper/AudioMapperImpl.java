@@ -4,6 +4,7 @@ import com.catalog.catalog.model.Audio;
 import com.catalog.catalog.model.User;
 import com.catalog.catalog.rest.dto.AudioDto;
 import com.catalog.catalog.rest.dto.CreateAudioRequest;
+import com.catalog.catalog.rest.dto.UploadAudioRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -55,5 +56,24 @@ public class AudioMapperImpl implements AudioMapper{
 
         return new Audio(createAudioRequest.getArtist(), createAudioRequest.getTitle(), audioFileBytes,coverArtBytes, user);
     }
+
+    @Override
+    public Audio toUploadAudio(UploadAudioRequest uploadAudioRequest, User user) {
+        if (uploadAudioRequest == null) {
+            return null;
+        }
+
+        byte[] audioFileBytes = null;
+        if (uploadAudioRequest.getAudioFile() != null) {
+            try {
+                audioFileBytes = uploadAudioRequest.getAudioFile().getBytes();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to convert audio file", e);
+            }
+        }
+
+        return new Audio("Unknown Artist", "Unknown Title", audioFileBytes, null, user);
+    }
+
 
 }

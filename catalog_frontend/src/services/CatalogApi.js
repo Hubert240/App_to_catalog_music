@@ -10,7 +10,8 @@ export const catalogApi = {
   getAudio,
   addAudio,
   deleteAudio,
-  numberOfAudio
+  numberOfAudio,
+  uploadAudio
 }
 
 function authenticate(username, password) {
@@ -54,12 +55,25 @@ function deleteAudio(user, id){
 }
 
 function addAudio(user, audio) {
-  return instance.post('/api/audio', audio, {
+  return instance.post('/api/audio/add', audio, {
     headers: {
       'Content-Type': 'multipart/form-data',
       'Authorization': basicAuth(user)
     }
   })
+}
+
+function uploadAudio(user, audioFile) {
+  const formData = new FormData();
+  formData.append('audioFile', audioFile); // Przesyłaj plik audio
+  formData.append('userId', user.id); // Przesyłaj ID użytkownika
+
+  return instance.post('/api/audio/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data', // Właściwy typ nagłówka
+      'Authorization': basicAuth(user) // Autoryzacja
+    }
+  });
 }
 
 

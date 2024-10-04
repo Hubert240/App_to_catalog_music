@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.catalog.catalog.repository.UserRepository;
+
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.mpatric.mp3agic.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.catalog.catalog.config.SwaggerConfig.BASIC_AUTH_SECURITY_SCHEME;
 
@@ -48,15 +52,59 @@ public class AudioController {
 
     @Operation(security = {@SecurityRequirement(name= BASIC_AUTH_SECURITY_SCHEME)})
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(consumes = {"multipart/form-data"})
+    @PostMapping(consumes = {"multipart/form-data"},path="/add")
     public AudioDto createAudio(@Valid @ModelAttribute CreateAudioRequest createAudioRequest){
         Long userId = createAudioRequest.getUserId();
 
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = optionalUser.get();
         Audio audio = audioMapper.toAudio(createAudioRequest,user);
+
         return audioMapper.toAudioDto(audioService.saveAudio(audio));
     }
+
+    @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(consumes = {"multipart/form-data"}, path = "/upload")
+    public AudioDto uploadAudio(@Valid @ModelAttribute UploadAudioRequest uploadAudioRequest) {
+        Long userId = uploadAudioRequest.getUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Audio audio = new Audio();
+        MultipartFile audioFile = uploadAudioRequest.getAudioFile();
+
+        if (!audioFile.isEmpty()) {
+            audio = audioMapper.toUploadAudio(uploadAudioRequest, user);
+
+            File tempFile = null;
+            try {
+                tempFile = File.createTempFile("audio_", ".mp3");
+                audioFile.transferTo(tempFile);
+
+                Mp3File mp3file = new Mp3File(tempFile);
+                if (mp3file.hasId3v2Tag()) {
+                    ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                    audio.setTitle(id3v2Tag.getTitle());
+                    audio.setArtist(id3v2Tag.getArtist());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to read audio metadata");
+            } finally {
+                if (tempFile != null && tempFile.exists()) {
+                    tempFile.delete();
+                }
+            }
+        }
+
+        audio.setUser(user);
+        return audioMapper.toAudioDto(audioService.saveAudio(audio));
+    }
+
+
+
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @DeleteMapping("/{id}")

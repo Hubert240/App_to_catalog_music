@@ -1,6 +1,6 @@
 .container{
     width: 400px;
-    height: 400px;
+    height: 480px;
     background-color: #202020;
     margin: 0 auto;
     padding: 20px;
@@ -41,6 +41,6 @@
 .inputField{
     margin-bottom: 10px;
     border-radius: 10px;
-    width: 95%;
+    width: 100%;
     padding: 10px;
 }
