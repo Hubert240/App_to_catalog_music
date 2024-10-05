@@ -1,4 +1,4 @@
 package com.catalog.catalog.rest.dto;
 
-public record AuthResponse(Long id, String name, String role) {
+public record AuthResponse(Long id, String username, String role) {
 }

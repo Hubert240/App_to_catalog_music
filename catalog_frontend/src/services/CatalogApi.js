@@ -11,7 +11,8 @@ export const catalogApi = {
   addAudio,
   deleteAudio,
   numberOfAudio,
-  uploadAudio
+  uploadAudio,
+  getAudioDetails
 }
 
 function authenticate(username, password) {
@@ -65,13 +66,13 @@ function addAudio(user, audio) {
 
 function uploadAudio(user, audioFile) {
   const formData = new FormData();
-  formData.append('audioFile', audioFile); // Przesyłaj plik audio
-  formData.append('userId', user.id); // Przesyłaj ID użytkownika
+  formData.append('audioFile', audioFile);
+  formData.append('userId', user.id);
 
   return instance.post('/api/audio/upload', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data', // Właściwy typ nagłówka
-      'Authorization': basicAuth(user) // Autoryzacja
+      'Content-Type': 'multipart/form-data',
+      'Authorization': basicAuth(user)
     }
   });
 }
@@ -86,18 +87,24 @@ function getAudio(user, title){
 }
 
 
+function getAudioDetails(user,id){
+  const url = `/api/audio/audio/${id}`
+  return instance.get(url,{
+    headers:{'Authorization':basicAuth(user)}
+  })
+}
+
+
 function numberOfAudio() {
   return instance.get('/public/numberOfAudio')
 }
 
 
-// -- Axios
 
 const instance = axios.create({
   baseURL: config.url.API_BASE_URL
 })
 
-// -- Helper functions
 
 function basicAuth(user) {
   return `Basic ${user.authdata}`

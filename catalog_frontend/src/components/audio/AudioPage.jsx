@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { handleLogError } from '../../services/Helpers';
 import { catalogApi } from '../../services/CatalogApi';
 import { useAuth } from '../../services/AuthContext';
+import { Link } from 'react-router-dom'
+import styles from './AudioPage.module.css'
 
 function AudioPage() {
   const Auth = useAuth();
@@ -10,6 +12,15 @@ function AudioPage() {
   const [audio, setAudio] = useState([]);
   const [title, setTitle] = useState('');
   const [searchTitle, setSearchTitle] = useState('');
+
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTitle(title);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [title]);
 
   useEffect(() => {
     handleGetAudio();
@@ -25,10 +36,7 @@ function AudioPage() {
     }
   };
 
-  const handleSearch = () => {
-    setSearchTitle(title);
-  };
-
+ 
   const handleDeleteAudio = async (id) => {
     try {
       await catalogApi.deleteAudio(user, id);
@@ -39,59 +47,54 @@ function AudioPage() {
   };
 
   return (
-    <div>
-      <h2>Lista Audio</h2>
-      <div>
+    <div className={styles.container}>
+      <h2 className={styles.heading}>Lista Audio</h2>
+      <div className={styles.searchInput}>
         <input
           type="text"
           placeholder="Wyszukaj po tytule"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <button onClick={handleSearch}>Szukaj</button>
+        <div>
+      <Link to="/addaudio" className={styles.addButton}>
+        Dodaj nowy plik
+      </Link>
+    </div>
+    <div>
+      <Link to="/uploadaudio" className={styles.addButton}>
+        Wgraj nowy plik
+      </Link>
+    </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Tytuł</th>
-            <th>Artysta</th>
-            <th>Użytkownik</th>
-            <th>Okładka</th>
-            <th>Plik</th>
-            <th>Akcje</th>
-          </tr>
-        </thead>
-        <tbody>
-          {audio.map((audioFile) => (
-            <tr key={audioFile.id}>
-              <td>{audioFile.title}</td>
-              <td>{audioFile.artist}</td>
-              <td>{audioFile.user ? audioFile.user.username : 'Nieznany'}</td>
-              <td>
-                {audioFile.coverArt && (
-                  <img
-                    src={`data:image/png;base64,${audioFile.coverArt}`}
-                    alt={`Okładka: ${audioFile.title}`}
-                    style={{ width: '50px', height: '50px' }}
-                  />
-                )}
-              </td>
-              <td>
-                {audioFile.audioFile && (
-                  <audio controls>
-                    <source src={`data:audio/wav;base64,${audioFile.audioFile}`} type="audio/wav" />
-                  </audio>
-                )}
-              </td>
-              <td>
-                <button onClick={() => handleDeleteAudio(audioFile.id)}>Usuń</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className={styles.table}>
+        <div className={styles.header}>
+          <div className={styles.column}>Tytuł</div>
+          <div className={styles.column}>Artysta</div>
+          <div className={styles.column}> </div>
+          <div className={styles.column}> </div>
+        </div>
+        {audio.map((audioFile) => (
+          <div key={audioFile.id} className={styles.row}>
+            <div className={styles.column}>{audioFile.title}</div>
+            <div className={styles.column}>{audioFile.artist}</div>
+      
+            <div className={styles.column}>
+            <div className={styles.buttonContainer}>
+              <Link className={styles.detailsButton} to={`/audiodetails/${audioFile.id}`}>
+                Zobacz szczegóły
+              </Link>
+             </div>
+             </div>
+            <div className={styles.column}> 
+              <button className={styles.deleteButton} onClick={() => handleDeleteAudio(audioFile.id)}>Usuń</button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
+  
 }
 
 export default AudioPage;

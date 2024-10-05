@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
-import { catalogApi } from '../../services/CatalogApi'; // Zakładam, że ta funkcja jest w CatalogApi.js
+import { catalogApi } from '../../services/CatalogApi';
 import { useAuth } from '../../services/AuthContext';
 
 const UploadAudioPage = () => {
   const { getUser } = useAuth();
-  const user = getUser(); // Uzyskaj dane użytkownika
-  const [audioFile, setAudioFile] = useState(null); // Stan dla pliku audio
-  const [error, setError] = useState(null); // Stan dla błędów
-  const [success, setSuccess] = useState(null); // Stan dla sukcesu
+  const user = getUser(); 
+  const [audioFile, setAudioFile] = useState(null); 
+  const [error, setError] = useState(null); 
+  const [success, setSuccess] = useState(null);
 
   const handleFileChange = (event) => {
-    setAudioFile(event.target.files[0]); // Ustaw plik audio
+    setAudioFile(event.target.files[0]);
   };
 
   const handleUpload = async (event) => {
     event.preventDefault();
-    setError(null); // Resetuj błędy
-    setSuccess(null); // Resetuj sukces
+    setError(null); 
+    setSuccess(null); 
 
     if (!audioFile) {
       setError("Proszę wybrać plik audio.");
@@ -24,12 +24,12 @@ const UploadAudioPage = () => {
     }
 
     try {
-      const response = await catalogApi.uploadAudio(user, audioFile); // Wywołaj funkcję uploadAudio
+      const response = await catalogApi.uploadAudio(user, audioFile);
       setSuccess("Plik audio został pomyślnie przesłany!");
-      console.log(response.data); // Loguj odpowiedź
+      console.log(response.data); 
     } catch (error) {
       setError("Wystąpił błąd podczas przesyłania pliku: " + error.message);
-      console.error(error); // Loguj błąd
+      console.error(error); 
     }
   };
 
@@ -42,7 +42,7 @@ const UploadAudioPage = () => {
           <input
             type="file"
             id="audioFile"
-            accept="audio/*" // Akceptuj tylko pliki audio
+            accept="audio/*" 
             onChange={handleFileChange}
           />
         </div>

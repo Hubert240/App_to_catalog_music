@@ -46,19 +46,19 @@ function Login() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>Login</h2>
-      {isError && <p className="error-message">Nazwa lub hasło są błędne</p>}
+      <h2 className={styles.heading}>Logowanie</h2>
       <form onSubmit={handleSubmit} >
         <div className="form-group"> 
         <label className={styles.loginLabel}>Nazwa: </label>
-          <input className={styles.inputField} type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+          <input required className={styles.inputField} type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
         </div>
         <div className="form-group">
         <label className={styles.loginLabel}>Hasło: </label>
-          <input className={styles.inputField} type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+          <input required className={styles.inputField} type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
         </div>
-        <button className={styles.loginButton} type="submit">Login</button>
+        <button className={styles.loginButton} type="submit">Zaloguj</button>
       </form>
+      {isError && <p className={styles.errorMessage}>Nazwa lub hasło są błędne</p>}
     </div>
   );
 }

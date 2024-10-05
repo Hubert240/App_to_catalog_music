@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.catalog.catalog.repository.UserRepository;
 
@@ -49,6 +50,19 @@ public class AudioController {
                 .collect(Collectors.toList());
 
     }
+    @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
+    @GetMapping("/audio/{id}")
+    public ResponseEntity<Audio> getAudioById(@PathVariable Long id) {
+        Optional<Audio> audio = audioRepository.findById(id);
+        if (audio.isPresent()){
+            return ResponseEntity.ok(audio.get());
+        }
+        else{
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
 
     @Operation(security = {@SecurityRequirement(name= BASIC_AUTH_SECURITY_SCHEME)})
     @ResponseStatus(HttpStatus.CREATED)

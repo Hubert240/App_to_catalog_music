@@ -12,7 +12,7 @@ function Signup() {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('')
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -20,20 +20,23 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (!(username && password && name && email)) {
+    if (password !== confirmPassword) {
+      setIsError(true)
+      setErrorMessage("Hasła nie są takie same!")
+      return}
+    else if (!(username && password && email)) {
       setIsError(true)
       setErrorMessage('Wpisz wszystkie pola')
       return
     }
 
-    const user = { username, password, name, email }
+    const user = { username, password, email }
 
     try {
       const response = await catalogApi.signup(user)
-      const { id, name, role } = response.data
+      const { id, role } = response.data
       const authdata = window.btoa(username + ':' + password)
-      const authenticatedUser = { id, name, role, authdata }
+      const authenticatedUser = { id, role, authdata }
 
       Auth.userLogin(authenticatedUser)
 
@@ -43,7 +46,7 @@ function Signup() {
       handleLogError(error)
       if (error.response && error.response.data) {
         const errorData = error.response.data
-        let errorMessage = 'Invalid fields'
+        let errorMessage = 'Błędne pola'
         if (errorData.status === 409) {
           errorMessage = errorData.message
         } else if (errorData.status === 400) {
@@ -62,7 +65,6 @@ function Signup() {
   return (
     <div  className={styles.container}>
         <h2 className={styles.heading}>Rejestracja</h2>
-        {isError && <div>{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
           <label className={styles.registrationLabel}>Nazwa:</label>
@@ -70,6 +72,14 @@ function Signup() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+          <label className={styles.registrationLabel}>Email:</label>
+            <input className={styles.inputField}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -81,23 +91,16 @@ function Signup() {
             />
           </div>
           <div className="form-group">
-          <label className={styles.registrationLabel}>Nazwa:</label>
+          <label className={styles.registrationLabel}> Powtórz hasło:</label>
             <input className={styles.inputField}
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-          <label className={styles.registrationLabel}>Email:</label>
-            <input className={styles.inputField}
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
           <button className={styles.registrationButton} type="submit" > Zarejestruj się </button>
         </form>
+        {isError && <p className={styles.errorMessage}>{errorMessage}</p>}
       </div>
   );
 }

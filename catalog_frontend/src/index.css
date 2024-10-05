@@ -1,11 +1,17 @@
+html {
+  min-height: 100%;
+}
+
 
 body {
-  background-color: #f0f0f0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   margin: 0;
-  padding: 0;
-  background: linear-gradient(0deg, #b5037c 0%, #000000 90%);
-  min-height: 100vh;
+  background: linear-gradient(0deg,#000000 10%, #b5037c 50%, #000000 90%);
   color:white;
+  background-size: cover;
+  min-height: 100vh;
+  
 }
 
 
