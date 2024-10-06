@@ -9,7 +9,7 @@ import Signup from './components/authorization/RegistrationPage'
 import AdminPage from './components/admin/AdminPage'
 import UserPage from './components/user/UserPage'
 import AudioPage from './components/audio/AudioPage'
-import AddBookPage from './components/audio/AddAudio'
+import AddAudioPage from './components/audio/AddAudioPage'
 import UploadAudioPage from './components/audio/UploadAudioPage'
 import AudioDetails from './components/audio/AudioDetails'
 
@@ -25,7 +25,7 @@ function App() {
           <Route path="/adminpage" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
           <Route path="/userpage" element={<PrivateRoute><UserPage /></PrivateRoute>} />
           <Route path="/audio" element={<PrivateRoute><AudioPage/></PrivateRoute>}/>
-          <Route path="/addaudio" element={<PrivateRoute><AddBookPage/></PrivateRoute>}/>
+          <Route path="/addaudio" element={<PrivateRoute><AddAudioPage/></PrivateRoute>}/>
           <Route path="/uploadaudio" element={<PrivateRoute><UploadAudioPage/></PrivateRoute>}/>
           <Route path="/audiodetails/:id" element={<PrivateRoute><AudioDetails /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/" />} />

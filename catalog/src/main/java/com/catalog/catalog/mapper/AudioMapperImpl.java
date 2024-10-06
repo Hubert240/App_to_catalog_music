@@ -20,14 +20,29 @@ public class AudioMapperImpl implements AudioMapper{
         }
 
         User user = audio.getUser();
-        if (user != null) {
-            return new AudioDto(audio.getId(), audio.getTitle(), audio.getArtist(), audio.getAudioFile(),audio.getCoverArt(), user);
-        } else {
-            return new AudioDto(audio.getId(), audio.getTitle(), audio.getArtist(), audio.getAudioFile(), audio.getCoverArt(), null);
-        }
-
-
+        return new AudioDto(
+                audio.getId(),
+                audio.getTitle(),
+                audio.getArtist(),
+                audio.getAudioFile(),
+                audio.getCoverArt(),
+                user,
+                audio.getTrack(),
+                audio.getAlbum(),
+                audio.getYear(),
+                audio.getGenre(),
+                audio.getComment(),
+                audio.getLyrics(),
+                audio.getComposer(),
+                audio.getPublisher(),
+                audio.getOriginalArtist(),
+                audio.getAlbumArtist(),
+                audio.getCopyright(),
+                audio.getUrl(),
+                audio.getEncoder()
+        );
     }
+
 
 
     @Override
@@ -54,7 +69,26 @@ public class AudioMapperImpl implements AudioMapper{
         }
 
 
-        return new Audio(createAudioRequest.getArtist(), createAudioRequest.getTitle(), audioFileBytes,coverArtBytes, user);
+        return new Audio(
+                createAudioRequest.getArtist(),
+                createAudioRequest.getTitle(),
+                audioFileBytes,
+                coverArtBytes,
+                user,
+                createAudioRequest.getTrack(),
+                createAudioRequest.getAlbum(),
+                createAudioRequest.getYear(),
+                createAudioRequest.getGenre(),
+                createAudioRequest.getComment(),
+                createAudioRequest.getLyrics(),
+                createAudioRequest.getComposer(),
+                createAudioRequest.getPublisher(),
+                createAudioRequest.getOriginalArtist(),
+                createAudioRequest.getAlbumArtist(),
+                createAudioRequest.getCopyright(),
+                createAudioRequest.getUrl(),
+                createAudioRequest.getEncoder()
+        );
     }
 
     @Override
@@ -72,7 +106,26 @@ public class AudioMapperImpl implements AudioMapper{
             }
         }
 
-        return new Audio("Unknown Artist", "Unknown Title", audioFileBytes, null, user);
+        return new Audio(
+                "Unknown Artist",
+                "Unknown Title",
+                audioFileBytes,
+                null,
+                user,
+                "Unknown Track",
+                "Unknown Album",
+                "0",
+                "Unknown Genre",
+                "No Comment",
+                "No Lyrics",
+                "Unknown Composer",
+                "Unknown Publisher",
+                "Unknown Original Artist",
+                "Unknown Album Artist",
+                "No Copyright",
+                "No URL",
+                "Unknown Encoder"  
+        );
     }
 
 

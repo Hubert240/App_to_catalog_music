@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import com.catalog.catalog.repository.UserRepository;
 
 import java.io.File;
+import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -102,6 +103,28 @@ public class AudioController {
                     ID3v2 id3v2Tag = mp3file.getId3v2Tag();
                     audio.setTitle(id3v2Tag.getTitle());
                     audio.setArtist(id3v2Tag.getArtist());
+                    audio.setTrack(id3v2Tag.getTrack());
+                    audio.setAlbum(id3v2Tag.getAlbum());
+                    audio.setYear(id3v2Tag.getYear());
+                    audio.setGenre(String.valueOf(id3v2Tag.getGenre()));
+                    audio.setComment(id3v2Tag.getComment());
+                    audio.setLyrics(id3v2Tag.getLyrics());
+                    audio.setComposer(id3v2Tag.getComposer());
+                    audio.setPublisher(id3v2Tag.getPublisher());
+                    audio.setOriginalArtist(id3v2Tag.getOriginalArtist());
+                    audio.setAlbumArtist(id3v2Tag.getAlbumArtist());
+                    audio.setCopyright(id3v2Tag.getCopyright());
+                    audio.setUrl(id3v2Tag.getUrl());
+                    audio.setEncoder(id3v2Tag.getEncoder());
+                    byte[] imageData = id3v2Tag.getAlbumImage();
+                    if (imageData != null) {
+                        String mimeType = id3v2Tag.getAlbumImageMimeType();
+
+                        RandomAccessFile file = new RandomAccessFile("album-artwork", "rw");
+                        file.write(imageData);
+                        file.close();
+                    }
+                    audio.setCoverArt(imageData);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

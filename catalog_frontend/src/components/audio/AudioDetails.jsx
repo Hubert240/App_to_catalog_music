@@ -24,9 +24,6 @@ function AudioDetails() {
     }
   };
 
-
-
-
   if (!audioDetails) {
     return <p>Ładowanie...</p>; // Wyświetl komunikat, gdy dane się ładują
   }
@@ -35,6 +32,19 @@ function AudioDetails() {
     <div className={styles.detailsContainer}>
       <h2 className={styles.title}>{audioDetails.title}</h2>
       <p className={styles.artist}>Artysta: {audioDetails.artist}</p>
+      <p className={styles.track}>Numer utworu: {audioDetails.track}</p>
+      <p className={styles.album}>Album: {audioDetails.album}</p>
+      <p className={styles.year}>Rok: {audioDetails.year}</p>
+      <p className={styles.genre}>Gatunek: {audioDetails.genre}</p>
+      <p className={styles.comment}>Komentarz: {audioDetails.comment}</p>
+      <p className={styles.lyrics}>Tekst: {audioDetails.lyrics}</p>
+      <p className={styles.composer}>Kompozytor: {audioDetails.composer}</p>
+      <p className={styles.publisher}>Wydawca: {audioDetails.publisher}</p>
+      <p className={styles.originalArtist}>Artysta oryginalny: {audioDetails.originalArtist}</p>
+      <p className={styles.albumArtist}>Artysta albumu: {audioDetails.albumArtist}</p>
+      <p className={styles.copyright}>Prawa autorskie: {audioDetails.copyright}</p>
+      <p className={styles.url}>URL: {audioDetails.url}</p>
+      <p className={styles.encoder}>Kodera: {audioDetails.encoder}</p>
       <p className={styles.user}>Użytkownik: {audioDetails.user ? audioDetails.user.username : 'Nieznany'}</p>
 
       {audioDetails.coverArt && (
@@ -55,8 +65,6 @@ function AudioDetails() {
         </div>
       )}
 
-      {/* Dodatkowe szczegóły */}
-      <p className={styles.description}>Opis pliku audio...</p>
     </div>
   );
 }
