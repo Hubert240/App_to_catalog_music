@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { catalogApi } from '../../services/CatalogApi';
+import styles from './Home.module.css';
+
 function Home() {
   const [audioCount, setAudioCount] = useState(0);
 
@@ -17,9 +19,10 @@ function Home() {
   }, []);
 
   return (
-    <div>
-      <h1>Witaj na stronie głównej</h1>
+    <div className={styles['home-container']}>
+      <h1>Witaj na stronie głównej MusixList</h1>
       <p>Liczba plików audio: {audioCount}</p>
+      <div className={styles['neon-border']}></div> {/* Efekt neonowego obramowania */}
     </div>
   );
 }
