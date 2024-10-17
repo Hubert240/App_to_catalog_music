@@ -21,7 +21,7 @@ function Navbar() {
             <img src={logo} alt="Logo" style={{ width: '50px', height: '50px' }} />
           </Link>
         </li>
-        {userIsAuthenticated() && <li><Link to="/adminpage">Adminpage</Link></li>}
+
         {userIsAuthenticated() && <li><Link to="/audio">Pliki</Link></li>}
         {!userIsAuthenticated() && <li><Link to="/login">Logowanie</Link></li>}
           {!userIsAuthenticated() && <li><Link to="/signup">Rejestracja</Link></li>}

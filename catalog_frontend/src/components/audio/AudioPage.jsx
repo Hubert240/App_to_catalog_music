@@ -8,6 +8,7 @@ import styles from './AudioPage.module.css'
 function AudioPage() {
   const Auth = useAuth();
   const user = Auth.getUser();
+  const userId = user.id;
 
   const [audio, setAudio] = useState([]);
   const [title, setTitle] = useState('');
@@ -28,7 +29,7 @@ function AudioPage() {
 
   const handleGetAudio = async () => {
     try {
-      const response = await catalogApi.getAudio(user, searchTitle);
+      const response = await catalogApi.getAudio(user,userId,searchTitle);
       const audioData = response.data;
       setAudio(audioData);
     } catch (error) {
@@ -48,15 +49,15 @@ function AudioPage() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>Lista Audio</h2>
-      <div className={styles.searchInput}>
-        <input
-          type="text"
-          placeholder="Wyszukaj po tytule"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <div>
+  <h2 className={styles.heading}>Lista Audio</h2>
+  <div className={styles.searchInput}>
+    <input
+      type="text"
+      placeholder="Wyszukaj po tytule"
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+    />
+    <div>
       <Link to="/addaudio" className={styles.addButton}>
         Dodaj nowy plik
       </Link>
@@ -66,33 +67,37 @@ function AudioPage() {
         Wgraj nowy plik
       </Link>
     </div>
-      </div>
-      <div className={styles.table}>
-        <div className={styles.header}>
-          <div className={styles.column}>Tytuł</div>
-          <div className={styles.column}>Artysta</div>
-          <div className={styles.column}> </div>
-          <div className={styles.column}> </div>
-        </div>
-        {audio.map((audioFile) => (
-          <div key={audioFile.id} className={styles.row}>
-            <div className={styles.column}>{audioFile.title}</div>
-            <div className={styles.column}>{audioFile.artist}</div>
-      
-            <div className={styles.column}>
-            <div className={styles.buttonContainer}>
-              <Link className={styles.detailsButton} to={`/audiodetails/${audioFile.id}`}>
-                Zobacz szczegóły
-              </Link>
-             </div>
-             </div>
-            <div className={styles.column}> 
-              <button className={styles.deleteButton} onClick={() => handleDeleteAudio(audioFile.id)}>Usuń</button>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div>
+      <Link to="/searchData" className={styles.addButton}>
+        Wyszukaj dane pliku
+      </Link>
     </div>
+  </div>
+  <div className={styles.table}>
+    <div className={styles.headerAudio}>
+      <div className={styles.columnAudio}>Tytuł</div>
+      <div className={styles.columnAudio}>Artysta</div>
+      <div className={styles.columnAudio}> </div>
+      <div className={styles.columnAudio}> </div>
+    </div>
+    {audio.map((audioFile) => (
+      <div key={audioFile.id} className={styles.rowAudio}>
+        <div className={styles.columnAudio}>{audioFile.title}</div>
+        <div className={styles.columnAudio}>{audioFile.artist}</div>
+        <div className={styles.columnAudio}>
+          <div className={styles.buttonContainer}>
+            <Link className={styles.detailsButton} to={`/audiodetails/${audioFile.id}`}>
+              Zobacz szczegóły
+            </Link>
+          </div>
+        </div>
+        <div className={styles.columnAudio}> 
+          <button className={styles.deleteButton} onClick={() => handleDeleteAudio(audioFile.id)}>Usuń</button>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
   );
   
 }

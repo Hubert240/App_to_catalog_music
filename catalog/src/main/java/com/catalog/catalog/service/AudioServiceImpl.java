@@ -23,6 +23,13 @@ public class AudioServiceImpl implements AudioService{
 
     @Transactional
     @Override
+    public List<Audio> getAudioByUserId(Long userId) {
+        return audioRepository.findByUserId(userId);
+    }
+
+
+    @Transactional
+    @Override
     public Audio saveAudio(Audio audio){return audioRepository.save(audio);}
 
     @Transactional
@@ -33,6 +40,13 @@ public class AudioServiceImpl implements AudioService{
     @Override
     public List<Audio> getAudioContainingTitle(String title){
         return audioRepository.findByTitleContainingIgnoreCase(title);
+
+    }
+
+    @Transactional
+    @Override
+    public List<Audio> getAudioContainingTitleAndUserId(String title,Long userId){
+        return audioRepository.findByTitleContainingIgnoreCaseAndUserId(title,userId);
 
     }
 }

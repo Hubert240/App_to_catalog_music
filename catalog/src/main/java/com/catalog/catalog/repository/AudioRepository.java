@@ -9,5 +9,9 @@ public interface AudioRepository extends JpaRepository<Audio,Long> {
 
     List<Audio> findByTitleContainingIgnoreCase(String title);
 
+    List<Audio> findByUserId(Long userId);
+
+    List<Audio> findByTitleContainingIgnoreCaseAndUserId(String title,Long userId);
+
 
 }

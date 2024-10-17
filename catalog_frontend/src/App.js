@@ -12,6 +12,7 @@ import AudioPage from './components/audio/AudioPage'
 import AddAudioPage from './components/audio/AddAudioPage'
 import UploadAudioPage from './components/audio/UploadAudioPage'
 import AudioDetails from './components/audio/AudioDetails'
+import SearchDataPage from './components/audio/SearchDataPage'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/addaudio" element={<PrivateRoute><AddAudioPage/></PrivateRoute>}/>
           <Route path="/uploadaudio" element={<PrivateRoute><UploadAudioPage/></PrivateRoute>}/>
           <Route path="/audiodetails/:id" element={<PrivateRoute><AudioDetails /></PrivateRoute>} />
+          <Route path="/searchdata" element={<PrivateRoute><SearchDataPage/></PrivateRoute>}/>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

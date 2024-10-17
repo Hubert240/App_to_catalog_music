@@ -12,7 +12,9 @@ export const catalogApi = {
   deleteAudio,
   numberOfAudio,
   uploadAudio,
-  getAudioDetails
+  getAudioDetails,
+  searchAudioData,
+  searchAudioUpload
 }
 
 function authenticate(username, password) {
@@ -79,8 +81,9 @@ function uploadAudio(user, audioFile) {
 
 
 
-function getAudio(user, title){
-  const url = title ? `/api/audio?title=${title}` : '/api/audio'
+function getAudio(user,userId, title){
+  const url = title ? `/api/audio?userId=${userId}&title=${title}`
+         : `/api/audio?userId=${userId}`
   return instance.get(url, {
     headers: { 'Authorization': basicAuth(user) }
   })
@@ -93,6 +96,32 @@ function getAudioDetails(user,id){
     headers:{'Authorization':basicAuth(user)}
   })
 }
+
+
+function searchAudioData(user,title,artist){
+  const url = `/music`
+  return instance.get(url,{
+    headers:{'Authorization':basicAuth(user)
+  },
+  params:{title:title,artist:artist}});
+}
+
+function searchAudioUpload(user, audioFile) {
+  const formData = new FormData();
+  formData.append('audioFile', audioFile);
+  formData.append('userId', user.id);
+
+  return instance.post('/music/uploadFile', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': basicAuth(user)
+    }
+  });
+}
+
+
+
+
 
 
 function numberOfAudio() {

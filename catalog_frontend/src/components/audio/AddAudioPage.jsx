@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../services/AuthContext';
 import { catalogApi } from '../../services/CatalogApi';
 import { handleLogError } from '../../services/Helpers';
-import styles from './AddAudioPage.module.css'; // Import stylów
+import styles from './AddAudioPage.module.css';
 
 function AddAudioPage() {
   const Auth = useAuth();

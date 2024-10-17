@@ -41,7 +41,7 @@ public class AudioController {
 
     @Autowired
     private AudioRepository audioRepository;
-
+/*
     @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
     public List<AudioDto> getAudio(@RequestParam(value ="title", required = false) String title){
@@ -51,6 +51,26 @@ public class AudioController {
                 .collect(Collectors.toList());
 
     }
+*/
+
+
+    @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
+    @GetMapping
+    public List<AudioDto> getAudioByUserId(@RequestParam Long userId,@RequestParam(value ="title", required = false) String title){
+        List<Audio> audio;
+
+        // Użyj userId do pobrania plików audio tylko dla danego użytkownika
+        if (title == null) {
+            audio = audioService.getAudioByUserId(userId); // Zaktualizowane
+        } else {
+            audio = audioService.getAudioContainingTitleAndUserId(title, userId); // Zaktualizowane
+        }
+        return audio.stream()
+                .map(audioMapper::toAudioDto)
+                .collect(Collectors.toList());
+
+    }
+
     @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/audio/{id}")
     public ResponseEntity<Audio> getAudioById(@PathVariable Long id) {

@@ -8,7 +8,11 @@ public interface AudioService {
 
     List<Audio> getAudio();
 
+    List<Audio> getAudioByUserId(Long userId);
+
     List<Audio> getAudioContainingTitle(String title);
+
+    List<Audio> getAudioContainingTitleAndUserId(String title,Long userId);
 
     Audio saveAudio(Audio audio);
 
