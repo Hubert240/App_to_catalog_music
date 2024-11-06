@@ -66,9 +66,12 @@ input[type="text"] {
 
 .headerAudio, .rowAudio {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr 2fr;
   padding: 10px;
   border-bottom: 1px solid #ff00cc;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
 }
 
 .headerAudio {
@@ -78,7 +81,27 @@ input[type="text"] {
 }
 
 .columnAudio {
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Odstęp między tekstem kolumny a przyciskiem */
+  padding: 8px;
+}
+
+.sortButton {
+  margin-left: 8px;
+  cursor: pointer;
+  border: none;
+  color: #007bff;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 5px 10px; /* Ustalenie paddingu */
+  background-color: transparent;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.sortButton:hover {
+  background-color: rgba(0, 123, 255, 0.1); /* Tło przy najechaniu */
 }
 
 .rowAudio:nth-child(even) {
@@ -119,3 +142,4 @@ input[type="text"] {
 .buttonContainer {
   text-align: center;
 }
+

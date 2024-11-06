@@ -14,7 +14,7 @@ export const catalogApi = {
   uploadAudio,
   getAudioDetails,
   searchAudioData,
-  searchAudioUpload
+  searchAudioUpload,
 }
 
 function authenticate(username, password) {
@@ -66,7 +66,7 @@ function addAudio(user, audio) {
   })
 }
 
-function uploadAudio(user, audioFile) {
+function uploadAudio(user, audioFile, onProgress) {
   const formData = new FormData();
   formData.append('audioFile', audioFile);
   formData.append('userId', user.id);
@@ -75,9 +75,11 @@ function uploadAudio(user, audioFile) {
     headers: {
       'Content-Type': 'multipart/form-data',
       'Authorization': basicAuth(user)
-    }
+    },
+    onUploadProgress: onProgress
   });
 }
+
 
 
 

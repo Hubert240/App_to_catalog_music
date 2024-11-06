@@ -23,6 +23,9 @@ function Navbar() {
         </li>
 
         {userIsAuthenticated() && <li><Link to="/audio">Pliki</Link></li>}
+        {userIsAuthenticated() && <li><Link to="/addaudio">Dodaj nowy plik</Link></li>}
+        {userIsAuthenticated() && <li><Link to="/uploadaudio">Wgraj nowy plik</Link></li>}
+        {userIsAuthenticated() && <li><Link to="/searchData">Wyszukaj dane pliku</Link></li>}
         {!userIsAuthenticated() && <li><Link to="/login">Logowanie</Link></li>}
           {!userIsAuthenticated() && <li><Link to="/signup">Rejestracja</Link></li>}
           {userIsAuthenticated() && <li><Link to="/userpage">Profil</Link></li>}
