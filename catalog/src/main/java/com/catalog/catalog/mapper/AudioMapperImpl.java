@@ -3,6 +3,7 @@ package com.catalog.catalog.mapper;
 import com.catalog.catalog.model.Audio;
 import com.catalog.catalog.model.User;
 import com.catalog.catalog.rest.dto.AudioDto;
+import com.catalog.catalog.rest.dto.AudioSummaryDto;
 import com.catalog.catalog.rest.dto.CreateAudioRequest;
 import com.catalog.catalog.rest.dto.UploadAudioRequest;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,33 @@ public class AudioMapperImpl implements AudioMapper{
         );
     }
 
+    @Override
+    public AudioSummaryDto toAudioSummaryDto(Audio audio) {
+        if (audio == null) {
+            return null;
+        }
 
+        User user = audio.getUser();
+        return new AudioSummaryDto(
+                audio.getId(),
+                audio.getTitle(),
+                audio.getArtist(),
+                user,
+                audio.getTrack(),
+                audio.getAlbum(),
+                audio.getYear(),
+                audio.getGenre(),
+                audio.getComment(),
+                audio.getLyrics(),
+                audio.getComposer(),
+                audio.getPublisher(),
+                audio.getOriginalArtist(),
+                audio.getAlbumArtist(),
+                audio.getCopyright(),
+                audio.getUrl(),
+                audio.getEncoder()
+        );
+    }
 
     @Override
     public Audio toAudio(CreateAudioRequest createAudioRequest, User user) {

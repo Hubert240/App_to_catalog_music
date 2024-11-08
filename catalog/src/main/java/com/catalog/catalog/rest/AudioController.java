@@ -56,7 +56,7 @@ public class AudioController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<AudioDto> getAudioByUserId(
+    public List<AudioSummaryDto> getAudioByUserId(
             @RequestParam Long userId,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "year", required = false) Integer year,
@@ -88,7 +88,7 @@ public class AudioController {
         }
 
         return audio.stream()
-                .map(audioMapper::toAudioDto)
+                .map(audioMapper::toAudioSummaryDto)
                 .collect(Collectors.toList());
     }
 
