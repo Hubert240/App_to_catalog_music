@@ -54,21 +54,42 @@ public class AudioController {
 */
 
 
-    @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
+    @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<AudioDto> getAudioByUserId(@RequestParam Long userId,@RequestParam(value ="title", required = false) String title){
+    public List<AudioDto> getAudioByUserId(
+            @RequestParam Long userId,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "year", required = false) Integer year,
+            @RequestParam(value = "artist", required = false) String artist,
+            @RequestParam(value = "album", required = false) String album) {
+
         List<Audio> audio;
 
-        // Użyj userId do pobrania plików audio tylko dla danego użytkownika
-        if (title == null) {
-            audio = audioService.getAudioByUserId(userId); // Zaktualizowane
+        if (title == null && year == null && artist == null && album == null) {
+            audio = audioService.getAudioByUserId(userId);
+        } else if (title != null && year != null && artist != null && album != null) {
+            audio = audioService.getAudioByTitleArtistAlbumYearAndUserId(title, artist, album, year, userId);
+        } else if (title != null && artist != null && album != null) {
+            audio = audioService.getAudioByTitleArtistAlbumAndUserId(title, artist, album, userId);
+        } else if (artist != null && album != null && year != null) {
+            audio = audioService.getAudioByArtistAlbumYearAndUserId(artist, album, year, userId);
+        } else if (title != null && year != null) {
+            audio = audioService.getAudioByTitleYearAndUserId(title, year, userId);
+        } else if (title != null && artist != null) {
+            audio = audioService.getAudioContainingTitleAndUserId(title, userId);
+        } else if (year != null) {
+            audio = audioService.getAudioByYearAndUserId(year, userId);
+        } else if (artist != null) {
+            audio = audioService.getAudioByArtistAndUserId(artist, userId);
+        } else if (album != null) {
+            audio = audioService.getAudioByAlbumAndUserId(album, userId);
         } else {
-            audio = audioService.getAudioContainingTitleAndUserId(title, userId); // Zaktualizowane
+            audio = audioService.getAudioByUserId(userId);
         }
+
         return audio.stream()
                 .map(audioMapper::toAudioDto)
                 .collect(Collectors.toList());
-
     }
 
     @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
@@ -125,7 +146,7 @@ public class AudioController {
                     audio.setArtist(id3v2Tag.getArtist());
                     audio.setTrack(id3v2Tag.getTrack());
                     audio.setAlbum(id3v2Tag.getAlbum());
-                    audio.setYear(id3v2Tag.getYear());
+                    audio.setYear(Integer.parseInt(id3v2Tag.getYear()));
                     audio.setGenre(String.valueOf(id3v2Tag.getGenre()));
                     audio.setComment(id3v2Tag.getComment());
                     audio.setLyrics(id3v2Tag.getLyrics());

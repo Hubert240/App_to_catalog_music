@@ -83,13 +83,27 @@ function uploadAudio(user, audioFile, onProgress) {
 
 
 
-function getAudio(user,userId, title){
-  const url = title ? `/api/audio?userId=${userId}&title=${title}`
-         : `/api/audio?userId=${userId}`
+function getAudio(user, userId, title, filters) {
+  // Tworzenie parametrów zapytania
+  let url = `/api/audio?userId=${userId}`;
+  if (title) {
+    url += `&title=${title}`;
+  }
+  if (filters.artist) {
+    url += `&artist=${filters.artist}`;
+  }
+  if (filters.album) {
+    url += `&album=${filters.album}`;
+  }
+  if (filters.year) {
+    url += `&year=${filters.year}`;
+  }
+  
   return instance.get(url, {
     headers: { 'Authorization': basicAuth(user) }
-  })
+  });
 }
+
 
 
 function getAudioDetails(user,id){

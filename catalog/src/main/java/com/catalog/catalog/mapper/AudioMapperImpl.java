@@ -114,7 +114,7 @@ public class AudioMapperImpl implements AudioMapper{
                 user,
                 "Unknown Track",
                 "Unknown Album",
-                "0",
+                0,
                 "Unknown Genre",
                 "No Comment",
                 "No Lyrics",

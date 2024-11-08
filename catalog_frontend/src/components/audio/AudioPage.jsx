@@ -13,9 +13,14 @@ function AudioPage() {
   const [audio, setAudio] = useState([]);
   const [title, setTitle] = useState('');
   const [searchTitle, setSearchTitle] = useState('');
-  const [sortField, setSortField] = useState('title'); // Domyślne pole do sortowania
-  const [isAscending, setIsAscending] = useState(true); // Domyślny kierunek sortowania
-  const [selectedSortOption, setSelectedSortOption] = useState(''); // Dla kolumny sortowania z listą rozwijaną
+  const [sortField, setSortField] = useState('title');
+  const [isAscending, setIsAscending] = useState(true);
+  const [filterVisible, setFilterVisible] = useState(false);
+  const [filters, setFilters] = useState({
+    artist: '',
+    album: '',
+    year: '',
+  });
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -27,11 +32,11 @@ function AudioPage() {
 
   useEffect(() => {
     handleGetAudio();
-  }, [searchTitle]);
+  }, [searchTitle, filters]);
 
   const handleGetAudio = async () => {
     try {
-      const response = await catalogApi.getAudio(user, userId, searchTitle);
+      const response = await catalogApi.getAudio(user, userId, searchTitle, filters);
       const audioData = response.data;
       setAudio(audioData);
     } catch (error) {
@@ -50,33 +55,30 @@ function AudioPage() {
 
   const handleSort = (field) => {
     const newIsAscending = sortField === field ? !isAscending : true;
-
     setSortField(field);
     setIsAscending(newIsAscending);
 
     const sortedAudio = [...audio].sort((a, b) => {
       const aValue = a[field];
       const bValue = b[field];
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return newIsAscending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-      } else {
-        return newIsAscending ? aValue - bValue : bValue - aValue;
-      }
+      return newIsAscending
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
     });
-
     setAudio(sortedAudio);
   };
 
-  const handleSelectSortOption = (event) => {
-    const selectedOption = event.target.value;
-    setSelectedSortOption(selectedOption);
-    handleSort(selectedOption);
+  const handleFilterChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Lista Audio</h2>
+
       <div className={styles.searchInput}>
         <input
           type="text"
@@ -85,6 +87,79 @@ function AudioPage() {
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
+
+      <button
+        onClick={() => setFilterVisible(!filterVisible)}
+        className={styles.filterButton}
+      >
+        Filtruj
+      </button>
+
+      {filterVisible && (
+  <div className={styles.overlay}>
+    <div className={styles.filterPopup}>
+      <div className={styles.columnAudioResults}>
+        <div className={styles.columnItem}>
+          <label htmlFor="artist">Artysta:</label>
+          <input
+            type="text"
+            id="artist"
+            name="artist"
+            value={filters.artist}
+            onChange={handleFilterChange}
+          />
+        </div>
+        <div className={styles.columnItem}>
+          <label htmlFor="album">Album:</label>
+          <input
+            type="text"
+            id="album"
+            name="album"
+            value={filters.album}
+            onChange={handleFilterChange}
+          />
+        </div>
+        <div className={styles.columnItem}>
+        <label htmlFor="year">Rok:</label>
+        <select
+          id="year"
+          name="year"
+          value={filters.year}
+          onChange={handleFilterChange}
+        >
+          <option value="">Wybierz rok</option>
+          {[...Array(new Date().getFullYear() - 1900 + 1)].map((_, index) => {
+            const year = 1900 + index;
+            return (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+      </div>
+
+      <button
+        onClick={() => {
+          handleGetAudio(); // Pobrać dane po kliknięciu
+          setFilterVisible(false); // Zamknij okienko po kliknięciu
+        }}
+        className={styles.applyButton}
+      >
+        Zatwierdź
+      </button>
+
+      <button
+        onClick={() => setFilterVisible(false)}
+        className={styles.closeButton}
+      >
+        Zamknij
+      </button>
+    </div>
+  </div>
+)}
+
       <div className={styles.table}>
         <div className={styles.headerAudio}>
           <div className={styles.columnAudio}>
@@ -108,23 +183,11 @@ function AudioPage() {
           <div className={styles.columnAudio}>
             Rok
             <button onClick={() => handleSort('year')} className={styles.sortButton}>
-              {sortField === 'year' ? (isAscending ? '🠕' : '🠗') : '🠕'}
+              {sortField === 'year' ? (isAscending ? '🠕' : '🠖') : '🠕'}
             </button>
           </div>
-          <div className={styles.columnAudio}>
-            Sortowanie
-            <select
-              value={selectedSortOption}
-              onChange={handleSelectSortOption}
-              className={styles.selectSort}
-            >
-              <option value="title">Tytuł</option>
-              <option value="artist">Artysta</option>
-              <option value="album">Album</option>
-              <option value="year">Rok</option>
-            </select>
-          </div>
         </div>
+
         {audio.map((audioFile) => (
           <div key={audioFile.id} className={styles.rowAudio}>
             <div className={styles.columnAudio}>{audioFile.title}</div>

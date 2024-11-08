@@ -87,7 +87,7 @@ public class MusicBrainzController {
                     audio.setAlbum(result.getRecordings().get(0).getReleases().get(0).getTitle());
                     audio.setComment(result.getRecordings().get(0).getArtistCredit().get(0).getArtist().getDisambiguation());
                     audio.setComposer(result.getRecordings().get(0).getArtistCredit().get(0).getArtist().getSortName());
-                    audio.setYear(result.getRecordings().get(0).getReleases().get(0).getDate());
+                    audio.setYear(Integer.parseInt(result.getRecordings().get(0).getReleases().get(0).getDate()));
                     audio.setTrack(result.getRecordings().get(0).getReleases().get(0).getMedia().get(0).getTrack().get(0).getNumber());
 
                 } else {

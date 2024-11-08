@@ -11,7 +11,7 @@ public record AudioDto(
         User user,
         String track,
         String album,
-        String year,
+        int year,
         String genre,
         String comment,
         String lyrics,

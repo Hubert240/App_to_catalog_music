@@ -143,3 +143,82 @@ input[type="text"] {
   text-align: center;
 }
 
+/* Okno pop-up do filtrowania */
+.filterButton {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.filterButton:hover {
+  background-color: #45a049;
+}
+
+/* Tło okienka filtrowania */
+.overlay {
+  position: fixed; /* Używamy fixed, aby overlay pokrywał całą stronę */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Ciemne tło */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Zapewni, że overlay będzie nad wszystkimi innymi elementami */
+}
+
+/* Okienko filtrowania */
+.filterPopup {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.columnAudioResults {
+  display: flex;
+  flex-direction: column;
+}
+
+.columnItem {
+  margin: 10px 0;
+  font-size: 14px;
+  color: black;
+}
+
+.columnItem input {
+  padding: 8px;
+  width: 100%;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Przycisk zamknięcia */
+.closeButton {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.closeButton:hover {
+  background-color: #d32f2f;
+}
+
+.columnItem select {
+  padding: 8px;
+  width: 100%;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
