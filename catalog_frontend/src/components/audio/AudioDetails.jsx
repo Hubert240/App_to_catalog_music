@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { catalogApi } from '../../services/CatalogApi';
 import { handleLogError } from '../../services/Helpers';
 import styles from './AudioDetails.module.css';
@@ -10,6 +10,7 @@ function AudioDetails() {
   const [audioDetails, setAudioDetails] = useState(null);
   const Auth = useAuth();
   const user = Auth.getUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAudioDetails();
@@ -28,8 +29,19 @@ function AudioDetails() {
     return <p>Ładowanie...</p>;
   }
 
+  const handleBackToList = () => {
+    navigate('/audio');
+  };
+
   return (
+    <div>
+ 
     <div className={styles.detailsContainer}>
+    <div className={styles.backContainer}>
+      <button onClick={handleBackToList} className={styles.backButton}>
+      ⭠ Powróć do listy
+      </button>
+      </div>
       <h2 className={styles.title}>{audioDetails.title}</h2>
       
       <div className={styles.detailsGrid}>
@@ -66,6 +78,7 @@ function AudioDetails() {
           </audio>
         </div>
       )}
+    </div>
     </div>
   );
 }

@@ -65,24 +65,30 @@ public class AudioController {
 
         List<Audio> audio;
 
-        if (title == null && year == null && artist == null && album == null) {
-            audio = audioService.getAudioByUserId(userId);
-        } else if (title != null && year != null && artist != null && album != null) {
+        if (title != null && year != null && artist != null && album != null) {
             audio = audioService.getAudioByTitleArtistAlbumYearAndUserId(title, artist, album, year, userId);
         } else if (title != null && artist != null && album != null) {
             audio = audioService.getAudioByTitleArtistAlbumAndUserId(title, artist, album, userId);
+        } else if (title != null && year != null && artist != null) {
+            audio = audioService.getAudioByTitleArtistYearAndUserId(title, artist, year, userId);
+        } else if (title != null && year != null && album != null) {
+            audio = audioService.getAudioByTitleAlbumYearAndUserId(title, album, year, userId);
         } else if (artist != null && album != null && year != null) {
             audio = audioService.getAudioByArtistAlbumYearAndUserId(artist, album, year, userId);
+        } else if (title != null && artist != null) {
+            audio = audioService.getAudioByTitleArtistAndUserId(title, artist, userId);
+        } else if (title != null && album != null) {
+            audio = audioService.getAudioByTitleAlbumAndUserId(title, album, userId);
         } else if (title != null && year != null) {
             audio = audioService.getAudioByTitleYearAndUserId(title, year, userId);
-        } else if (title != null && artist != null) {
-            audio = audioService.getAudioContainingTitleAndUserId(title, userId);
         } else if (year != null) {
             audio = audioService.getAudioByYearAndUserId(year, userId);
         } else if (artist != null) {
             audio = audioService.getAudioByArtistAndUserId(artist, userId);
         } else if (album != null) {
             audio = audioService.getAudioByAlbumAndUserId(album, userId);
+        } else if (title != null) {
+            audio = audioService.getAudioByTitleAndUserId(title, userId);
         } else {
             audio = audioService.getAudioByUserId(userId);
         }
