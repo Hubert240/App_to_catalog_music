@@ -14,7 +14,7 @@ function AddAudioPage() {
     track: '',
     album: '',
     year: '',
-    genre: '',
+    genreDescription: '',
     comment: '',
     lyrics: '',
     composer: '',
@@ -33,6 +33,12 @@ function AddAudioPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'year' && value && !/^\d*$/.test(value)) {
+      setErrorMessage('Rok może zawierać tylko cyfry.');
+      return;
+    }
+    setErrorMessage('');
     setAudio({
       ...audio,
       [name]: value,
@@ -64,7 +70,7 @@ function AddAudioPage() {
     formData.append('track', audio.track);
     formData.append('album', audio.album);
     formData.append('year', audio.year);
-    formData.append('genre', audio.genre);
+    formData.append('genreDescription', audio.genreDescription);
     formData.append('comment', audio.comment);
     formData.append('lyrics', audio.lyrics);
     formData.append('composer', audio.composer);
@@ -85,8 +91,8 @@ function AddAudioPage() {
         title: '',
         track: '',
         album: '',
-        year: '',
-        genre: '',
+        year: null,
+        genreDescription: '',
         comment: '',
         lyrics: '',
         composer: '',
@@ -109,6 +115,20 @@ function AddAudioPage() {
     <div className={styles.container}>
       <h2 className={styles.heading}>Dodaj nowy plik</h2>
       <form className={styles.form}>
+    <div>
+      <label htmlFor="title" className={styles.label}>Tytuł</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Tytuł"
+          value={audio.title}
+          onChange={handleInputChange}
+          className={styles.inputAddPage}
+          required
+        />
+      </div>
+      <div>
         <label htmlFor="artist" className={styles.label}>Artysta</label>
         <input
           type="text"
@@ -117,21 +137,11 @@ function AddAudioPage() {
           placeholder="Artysta"
           value={audio.artist}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
-        <label htmlFor="title" className={styles.label}>Tytuł</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          placeholder="Tytuł"
-          value={audio.title}
-          onChange={handleInputChange}
-          className={styles.textInput}
-          required
-        />
-
+        </div>
+  
+        <div>
         <label htmlFor="track" className={styles.label}>Numer utworu</label>
         <input
           type="text"
@@ -140,9 +150,10 @@ function AddAudioPage() {
           placeholder="Numer utworu"
           value={audio.track}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="album" className={styles.label}>Album</label>
         <input
           type="text"
@@ -151,9 +162,10 @@ function AddAudioPage() {
           placeholder="Album"
           value={audio.album}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="year" className={styles.label}>Rok</label>
         <input
           type="text"
@@ -162,20 +174,32 @@ function AddAudioPage() {
           placeholder="Rok"
           value={audio.year}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
-        <label htmlFor="genre" className={styles.label}>Gatunek</label>
-        <input
+        </div>
+        <div>
+        <label htmlFor="genreDescription" className={styles.label}>Gatunek</label>
+        <select
           type="text"
-          id="genre"
-          name="genre"
+          id="genreDescription"
+          name="genreDescription"
           placeholder="Gatunek"
-          value={audio.genre}
+          value={audio.genreDescription}
           onChange={handleInputChange}
-          className={styles.textInput}
-        />
-
+          className={styles.inputAddPage}
+        >
+          <option value="">Wybierz gatunek</option>
+          <option value="Pop">Pop</option>
+          <option value="Rock">Rock</option>
+          <option value="Jazz">Jazz</option>
+          <option value="Hip-Hop">Hip-Hop</option>
+          <option value="Classical">Classical</option>
+          <option value="Electronic">Electronic</option>
+          <option value="Country">Country</option>
+          <option value="Reggae">Reggae</option>
+        </select>
+        </div>
+        <div>
         <label htmlFor="comment" className={styles.label}>Komentarz</label>
         <input
           type="text"
@@ -184,9 +208,10 @@ function AddAudioPage() {
           placeholder="Komentarz"
           value={audio.comment}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="lyrics" className={styles.label}>Tekst</label>
         <input
           type="text"
@@ -195,9 +220,10 @@ function AddAudioPage() {
           placeholder="Tekst"
           value={audio.lyrics}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="composer" className={styles.label}>Kompozytor</label>
         <input
           type="text"
@@ -206,9 +232,10 @@ function AddAudioPage() {
           placeholder="Kompozytor"
           value={audio.composer}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="publisher" className={styles.label}>Wydawca</label>
         <input
           type="text"
@@ -217,9 +244,10 @@ function AddAudioPage() {
           placeholder="Wydawca"
           value={audio.publisher}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="originalArtist" className={styles.label}>Artysta oryginalny</label>
         <input
           type="text"
@@ -228,9 +256,10 @@ function AddAudioPage() {
           placeholder="Artysta oryginalny"
           value={audio.originalArtist}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="albumArtist" className={styles.label}>Artysta albumu</label>
         <input
           type="text"
@@ -239,9 +268,10 @@ function AddAudioPage() {
           placeholder="Artysta albumu"
           value={audio.albumArtist}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="copyright" className={styles.label}>Prawa autorskie</label>
         <input
           type="text"
@@ -250,9 +280,10 @@ function AddAudioPage() {
           placeholder="Prawa autorskie"
           value={audio.copyright}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="url" className={styles.label}>URL</label>
         <input
           type="text"
@@ -261,20 +292,22 @@ function AddAudioPage() {
           placeholder="URL"
           value={audio.url}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
-        <label htmlFor="encoder" className={styles.label}>Kodera</label>
+        </div>
+        <div>
+        <label htmlFor="encoder" className={styles.label}>Format kodowania</label>
         <input
           type="text"
           id="encoder"
           name="encoder"
-          placeholder="Kodera"
+          placeholder="Format kodowania"
           value={audio.encoder}
           onChange={handleInputChange}
-          className={styles.textInput}
+          className={styles.inputAddPage}
         />
-
+        </div>
+        <div>
         <label htmlFor="audioFile" className={styles.label}>Plik audio</label>
         <input
           type="file"
@@ -284,7 +317,8 @@ function AddAudioPage() {
           className={styles.fileInput}
           required
         />
-
+        </div>
+        <div>
         <label htmlFor="coverArt" className={styles.label}>Okładka</label>
         <input
           type="file"
@@ -293,8 +327,10 @@ function AddAudioPage() {
           onChange={handleCoverArtChange}
           className={styles.fileInput}
         />
-
+        </div>
+        <div>
         <button type="button" onClick={handleAddAudio} className={styles.button}>Dodaj</button>
+        </div>
       </form>
 
       {isSuccess && <p className={styles.successMessage}>Poprawnie dodano nowy plik</p>}

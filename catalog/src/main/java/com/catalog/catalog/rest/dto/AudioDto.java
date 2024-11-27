@@ -12,7 +12,7 @@ public record AudioDto(
         String track,
         String album,
         int year,
-        String genre,
+        String genreDescription,
         String comment,
         String lyrics,
         String composer,

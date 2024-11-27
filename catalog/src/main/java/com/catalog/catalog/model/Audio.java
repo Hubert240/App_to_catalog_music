@@ -19,8 +19,8 @@ public class Audio {
     private String artist;
     private String track;
     private String album;
-    private int year;
-    private String genre;
+    private Integer year;
+    private String genreDescription;
     private String comment;
     private String lyrics;
     private String composer;
@@ -41,7 +41,7 @@ public class Audio {
     @JoinColumn(name="user_id")
     private User user;
 
-    public Audio(String artist, String title, byte[] audioFile, byte[] coverArt, User user, String track, String album, int year, String genre, String comment, String lyrics, String composer, String publisher, String originalArtist, String albumArtist, String copyright, String url, String encoder) {
+    public Audio(String artist, String title, byte[] audioFile, byte[] coverArt, User user, String track, String album, Integer year, String genreDescription, String comment, String lyrics, String composer, String publisher, String originalArtist, String albumArtist, String copyright, String url, String encoder) {
         this.artist = artist;
         this.title = title;
         this.audioFile = audioFile;
@@ -50,7 +50,7 @@ public class Audio {
         this.track = track;
         this.album = album;
         this.year = year;
-        this.genre = genre;
+        this.genreDescription = genreDescription;
         this.comment = comment;
         this.lyrics = lyrics;
         this.composer = composer;

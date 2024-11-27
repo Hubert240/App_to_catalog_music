@@ -12,7 +12,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.catalog.catalog.repository.UserRepository;
@@ -153,7 +155,7 @@ public class AudioController {
                     audio.setTrack(id3v2Tag.getTrack());
                     audio.setAlbum(id3v2Tag.getAlbum());
                     audio.setYear(Integer.parseInt(id3v2Tag.getYear()));
-                    audio.setGenre(String.valueOf(id3v2Tag.getGenre()));
+                    audio.setGenreDescription(id3v2Tag.getGenreDescription());
                     audio.setComment(id3v2Tag.getComment());
                     audio.setLyrics(id3v2Tag.getLyrics());
                     audio.setComposer(id3v2Tag.getComposer());
@@ -204,5 +206,26 @@ public class AudioController {
     }
 
 
+
+    @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
+    @GetMapping("/download/{id}")
+    public ResponseEntity<byte[]> downloadAudioFile(@PathVariable Long id) {
+        try {
+            Optional<Audio> audioOptional = audioRepository.findById(id);
+
+            if (audioOptional.isPresent()) {
+                Audio audio = audioOptional.get();
+
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + audio.getTitle() + ".mp3")
+                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .body(audio.getAudioFile());
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }

@@ -33,6 +33,18 @@ function AudioDetails() {
     navigate('/audio');
   };
 
+  
+
+  const handleDownloadAudio = () => {
+    catalogApi.downloadAudio(user, id)
+      .then(() => {
+      })
+      .catch(error => {
+        handleLogError(error);
+      });
+  };
+
+  
   return (
     <div>
  
@@ -43,7 +55,8 @@ function AudioDetails() {
       </button>
       </div>
       <h2 className={styles.title}>{audioDetails.title}</h2>
-      
+      <div className={styles.downloadButtonContainer}>
+      </div>
       <div className={styles.detailsGrid}>
         <div><span className={styles.labelAudio}>Artysta:</span><span className={styles.value}>{audioDetails.artist}</span></div>
         <div><span className={styles.labelAudio}>Numer utworu:</span><span className={styles.value}>{audioDetails.track}</span></div>
@@ -78,7 +91,11 @@ function AudioDetails() {
           </audio>
         </div>
       )}
+             <button onClick={handleDownloadAudio} className={styles.downloadButton}>
+          Pobierz plik audio
+        </button>
     </div>
+    
     </div>
   );
 }

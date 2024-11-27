@@ -15,6 +15,7 @@ export const catalogApi = {
   getAudioDetails,
   searchAudioData,
   searchAudioUpload,
+  downloadAudio,
 }
 
 function authenticate(username, password) {
@@ -134,6 +135,25 @@ function searchAudioUpload(user, audioFile) {
   });
 }
 
+function downloadAudio(user, id) {
+  const url = `/api/audio/download/${id}`;
+  return instance.get(url, {
+    headers: { 'Authorization': basicAuth(user) },
+    responseType: 'blob',
+  }).then(response => {
+    if (response && response.data) {
+      const blob = response.data;
+      const downloadUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `audio-${id}.mp3`;
+      a.click();
+      URL.revokeObjectURL(downloadUrl);
+    }
+  }).catch(error => {
+    console.error("Błąd pobierania pliku audio:", error);
+  });
+}
 
 
 

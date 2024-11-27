@@ -6,9 +6,14 @@ import com.catalog.catalog.rest.dto.AudioDto;
 import com.catalog.catalog.rest.dto.AudioSummaryDto;
 import com.catalog.catalog.rest.dto.CreateAudioRequest;
 import com.catalog.catalog.rest.dto.UploadAudioRequest;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.Mp3File;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public class AudioMapperImpl implements AudioMapper{
@@ -30,8 +35,8 @@ public class AudioMapperImpl implements AudioMapper{
                 user,
                 audio.getTrack(),
                 audio.getAlbum(),
-                audio.getYear(),
-                audio.getGenre(),
+                audio.getYear() != null ? audio.getYear() : 0,
+                audio.getGenreDescription(),
                 audio.getComment(),
                 audio.getLyrics(),
                 audio.getComposer(),
@@ -58,8 +63,8 @@ public class AudioMapperImpl implements AudioMapper{
                 user,
                 audio.getTrack(),
                 audio.getAlbum(),
-                audio.getYear(),
-                audio.getGenre(),
+                audio.getYear() != null ? audio.getYear() : 0,
+                audio.getGenreDescription(),
                 audio.getComment(),
                 audio.getLyrics(),
                 audio.getComposer(),
@@ -86,6 +91,7 @@ public class AudioMapperImpl implements AudioMapper{
                 throw new RuntimeException("Failed to convert audio file", e);
             }
         }
+
         byte[] coverArtBytes = null;
         if (createAudioRequest.getCoverArt() != null) {
             try {
@@ -95,28 +101,89 @@ public class AudioMapperImpl implements AudioMapper{
             }
         }
 
+        File tempFile = null;
+        try {
+            // Tworzymy tymczasowy plik, aby odczytać metadane
+            tempFile = File.createTempFile("audio_", ".mp3");
+            createAudioRequest.getAudioFile().transferTo(tempFile);
 
-        return new Audio(
-                createAudioRequest.getArtist(),
-                createAudioRequest.getTitle(),
-                audioFileBytes,
-                coverArtBytes,
-                user,
-                createAudioRequest.getTrack(),
-                createAudioRequest.getAlbum(),
-                createAudioRequest.getYear(),
-                createAudioRequest.getGenre(),
-                createAudioRequest.getComment(),
-                createAudioRequest.getLyrics(),
-                createAudioRequest.getComposer(),
-                createAudioRequest.getPublisher(),
-                createAudioRequest.getOriginalArtist(),
-                createAudioRequest.getAlbumArtist(),
-                createAudioRequest.getCopyright(),
-                createAudioRequest.getUrl(),
-                createAudioRequest.getEncoder()
-        );
+            // Otwieramy plik MP3
+            Mp3File mp3file = new Mp3File(tempFile);
+
+            // Jeśli plik MP3 ma tagi ID3v2, nadpisujemy metadane
+            if (mp3file.hasId3v2Tag()) {
+                ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+
+                // Nadpisujemy metadane z requestu
+                id3v2Tag.setTitle(createAudioRequest.getTitle());
+                id3v2Tag.setArtist(createAudioRequest.getArtist());
+                id3v2Tag.setAlbum(createAudioRequest.getAlbum());
+                id3v2Tag.setYear(String.valueOf(createAudioRequest.getYear()));
+                String genreDescription = createAudioRequest.getGenreDescription();
+                if (genreDescription != null && !genreDescription.isEmpty()) {
+                    id3v2Tag.setGenreDescription(genreDescription);
+                } else {
+                    id3v2Tag.setGenreDescription("Other");
+                }
+                    id3v2Tag.setComment(createAudioRequest.getComment());
+                id3v2Tag.setLyrics(createAudioRequest.getLyrics());
+                id3v2Tag.setComposer(createAudioRequest.getComposer());
+                id3v2Tag.setPublisher(createAudioRequest.getPublisher());
+                id3v2Tag.setOriginalArtist(createAudioRequest.getOriginalArtist());
+                id3v2Tag.setAlbumArtist(createAudioRequest.getAlbumArtist());
+                id3v2Tag.setCopyright(createAudioRequest.getCopyright());
+                id3v2Tag.setUrl(createAudioRequest.getUrl());
+                id3v2Tag.setEncoder(createAudioRequest.getEncoder());
+
+                // Jeśli masz okładkę (cover art), dodaj ją do tagu ID3v2
+                if (coverArtBytes != null) {
+                    id3v2Tag.setAlbumImage(coverArtBytes, "image/jpeg");
+                }
+
+                // Zapisujemy zmodyfikowany plik do nowej lokalizacji
+                File modifiedFile = new File(tempFile.getParent(), "modified_audio.mp3");
+                mp3file.save(modifiedFile.getAbsolutePath());
+
+                // Zapisujemy nowy plik jako byte array, który trafi do bazy
+                try (InputStream is = new FileInputStream(modifiedFile)) {
+                    audioFileBytes = is.readAllBytes();
+                }
+
+            }
+
+            // Tworzymy obiekt Audio
+            return new Audio(
+                    createAudioRequest.getArtist(),
+                    createAudioRequest.getTitle(),
+                    audioFileBytes,
+                    coverArtBytes,
+                    user,
+                    createAudioRequest.getTrack(),
+                    createAudioRequest.getAlbum(),
+                    createAudioRequest.getYear() != null ? createAudioRequest.getYear() : 0,
+                    createAudioRequest.getGenreDescription(),
+                    createAudioRequest.getComment(),
+                    createAudioRequest.getLyrics(),
+                    createAudioRequest.getComposer(),
+                    createAudioRequest.getPublisher(),
+                    createAudioRequest.getOriginalArtist(),
+                    createAudioRequest.getAlbumArtist(),
+                    createAudioRequest.getCopyright(),
+                    createAudioRequest.getUrl(),
+                    createAudioRequest.getEncoder()
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to read audio metadata", e);
+        } finally {
+            // Usuwamy tymczasowy plik
+            if (tempFile != null && tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
     }
+
 
     @Override
     public Audio toUploadAudio(UploadAudioRequest uploadAudioRequest, User user) {

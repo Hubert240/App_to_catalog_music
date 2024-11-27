@@ -73,8 +73,8 @@ audio {
 
 .backContainer {
   position: absolute;
-  top: -50px;  /* Odstęp od góry */
-  left: 10px; /* Odstęp od lewej krawędzi */
+  top: -50px;
+  left: 10px;
 }
 
 .backButton {
@@ -98,6 +98,24 @@ audio {
 
 .cover {
   text-align: center;
+}
+
+.downloadButton {
+  display: inline-block;
+  background-color: #d82bbb;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+.downloadButton:hover {
+  background-color: #881b79;
 }
 
 @media (max-width: 768px) {

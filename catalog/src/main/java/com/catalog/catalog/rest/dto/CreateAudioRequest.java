@@ -19,8 +19,8 @@ public class CreateAudioRequest {
 
     private String track;
     private String album;
-    private int year;
-    private String genre;
+    private Integer year;
+    private String genreDescription;
     private String comment;
     private String lyrics;
     private String composer;
