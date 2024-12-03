@@ -62,7 +62,7 @@ function AudioDetails() {
         <div><span className={styles.labelAudio}>Numer utworu:</span><span className={styles.value}>{audioDetails.track}</span></div>
         <div><span className={styles.labelAudio}>Album:</span><span className={styles.value}>{audioDetails.album}</span></div>
         <div><span className={styles.labelAudio}>Rok:</span><span className={styles.value}>{audioDetails.year}</span></div>
-        <div><span className={styles.labelAudio}>Gatunek:</span><span className={styles.value}>{audioDetails.genre}</span></div>
+        <div><span className={styles.labelAudio}>Gatunek:</span><span className={styles.value}>{audioDetails.genreDescription}</span></div>
         <div><span className={styles.labelAudio}>Komentarz:</span><span className={styles.value}>{audioDetails.comment}</span></div>
         <div><span className={styles.labelAudio}>Tekst:</span><span className={styles.value}>{audioDetails.lyrics}</span></div>
         <div><span className={styles.labelAudio}>Kompozytor:</span><span className={styles.value}>{audioDetails.composer}</span></div>

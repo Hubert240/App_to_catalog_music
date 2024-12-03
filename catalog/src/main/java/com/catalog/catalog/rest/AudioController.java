@@ -18,13 +18,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.catalog.catalog.repository.UserRepository;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.images.Artwork;
+
 
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import com.mpatric.mp3agic.*;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.catalog.catalog.config.SwaggerConfig.BASIC_AUTH_SECURITY_SCHEME;
@@ -100,29 +106,28 @@ public class AudioController {
                 .collect(Collectors.toList());
     }
 
-    @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
+    @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/audio/{id}")
     public ResponseEntity<Audio> getAudioById(@PathVariable Long id) {
         Optional<Audio> audio = audioRepository.findById(id);
-        if (audio.isPresent()){
+        if (audio.isPresent()) {
             return ResponseEntity.ok(audio.get());
-        }
-        else{
+        } else {
             return ResponseEntity.notFound().build();
         }
 
     }
 
 
-    @Operation(security = {@SecurityRequirement(name= BASIC_AUTH_SECURITY_SCHEME)})
+    @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(consumes = {"multipart/form-data"},path="/add")
-    public AudioDto createAudio(@Valid @ModelAttribute CreateAudioRequest createAudioRequest){
+    @PostMapping(consumes = {"multipart/form-data"}, path = "/add")
+    public AudioDto createAudio(@Valid @ModelAttribute CreateAudioRequest createAudioRequest) {
         Long userId = createAudioRequest.getUserId();
 
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = optionalUser.get();
-        Audio audio = audioMapper.toAudio(createAudioRequest,user);
+        Audio audio = audioMapper.toAudio(createAudioRequest, user);
 
         return audioMapper.toAudioDto(audioService.saveAudio(audio));
     }
@@ -144,40 +149,48 @@ public class AudioController {
 
             File tempFile = null;
             try {
-                tempFile = File.createTempFile("audio_", ".mp3");
+                String originalFilename = audioFile.getOriginalFilename();
+                String fileExtension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : ".audio";
+                tempFile = File.createTempFile("audio_", fileExtension);
                 audioFile.transferTo(tempFile);
 
-                Mp3File mp3file = new Mp3File(tempFile);
-                if (mp3file.hasId3v2Tag()) {
-                    ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                    audio.setTitle(id3v2Tag.getTitle());
-                    audio.setArtist(id3v2Tag.getArtist());
-                    audio.setTrack(id3v2Tag.getTrack());
-                    audio.setAlbum(id3v2Tag.getAlbum());
-                    audio.setYear(Integer.parseInt(id3v2Tag.getYear()));
-                    audio.setGenreDescription(id3v2Tag.getGenreDescription());
-                    audio.setComment(id3v2Tag.getComment());
-                    audio.setLyrics(id3v2Tag.getLyrics());
-                    audio.setComposer(id3v2Tag.getComposer());
-                    audio.setPublisher(id3v2Tag.getPublisher());
-                    audio.setOriginalArtist(id3v2Tag.getOriginalArtist());
-                    audio.setAlbumArtist(id3v2Tag.getAlbumArtist());
-                    audio.setCopyright(id3v2Tag.getCopyright());
-                    audio.setUrl(id3v2Tag.getUrl());
-                    audio.setEncoder(id3v2Tag.getEncoder());
-                    byte[] imageData = id3v2Tag.getAlbumImage();
-                    if (imageData != null) {
-                        String mimeType = id3v2Tag.getAlbumImageMimeType();
+                // Wczytanie metadanych za pomocą JAudioTagger
+                org.jaudiotagger.audio.AudioFile jaudioFile = org.jaudiotagger.audio.AudioFileIO.read(tempFile);
+                org.jaudiotagger.tag.Tag tag = jaudioFile.getTag();
 
-                        RandomAccessFile file = new RandomAccessFile("album-artwork", "rw");
-                        file.write(imageData);
-                        file.close();
+                if (tag != null) {
+                    audio.setTitle(tag.getFirst(org.jaudiotagger.tag.FieldKey.TITLE));
+                    audio.setArtist(tag.getFirst(org.jaudiotagger.tag.FieldKey.ARTIST));
+                    audio.setTrack(tag.getFirst(org.jaudiotagger.tag.FieldKey.TRACK));
+                    audio.setAlbum(tag.getFirst(org.jaudiotagger.tag.FieldKey.ALBUM));
+
+                    String yearString = tag.getFirst(org.jaudiotagger.tag.FieldKey.YEAR);
+                    if (!yearString.isEmpty()) {
+                        audio.setYear(Integer.parseInt(yearString));
                     }
-                    audio.setCoverArt(imageData);
+
+                    audio.setGenreDescription(tag.getFirst(org.jaudiotagger.tag.FieldKey.GENRE));
+                    audio.setComment(tag.getFirst(org.jaudiotagger.tag.FieldKey.COMMENT));
+                    audio.setLyrics(tag.getFirst(org.jaudiotagger.tag.FieldKey.LYRICS));
+                    audio.setComposer(tag.getFirst(org.jaudiotagger.tag.FieldKey.COMPOSER));
+                    audio.setOriginalArtist(tag.getFirst(org.jaudiotagger.tag.FieldKey.ORIGINAL_ARTIST));
+                    audio.setAlbumArtist(tag.getFirst(org.jaudiotagger.tag.FieldKey.ALBUM_ARTIST));
+                    audio.setUrl(tag.getFirst(org.jaudiotagger.tag.FieldKey.URL_OFFICIAL_RELEASE_SITE));
+                    audio.setEncoder(tag.getFirst(org.jaudiotagger.tag.FieldKey.ENCODER));
+
+                    // Obsługa okładki albumu (cover art)
+                    List<org.jaudiotagger.tag.images.Artwork> artworkList = tag.getArtworkList();
+                    if (!artworkList.isEmpty()) {
+                        org.jaudiotagger.tag.images.Artwork artwork = artworkList.get(0);
+                        byte[] imageData = artwork.getBinaryData();
+                        if (imageData != null) {
+                            audio.setCoverArt(imageData);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("Failed to read audio metadata");
+                throw new RuntimeException("Failed to read audio metadata", e);
             } finally {
                 if (tempFile != null && tempFile.exists()) {
                     tempFile.delete();
@@ -190,21 +203,17 @@ public class AudioController {
     }
 
 
-
-
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void  deleteAudio(@PathVariable Long id) {
+    public void deleteAudio(@PathVariable Long id) {
         Optional<Audio> audioOptional = audioRepository.findById(id);
-        if(audioOptional.isPresent()){
+        if (audioOptional.isPresent()) {
             audioService.deleteAudio(audioOptional.get());
-        }
-        else {
-            throw new EntityNotFoundException("Nie znaleziono obiektu o takim id:"+ id);
+        } else {
+            throw new EntityNotFoundException("Nie znaleziono obiektu o takim id:" + id);
         }
     }
-
 
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
@@ -227,5 +236,6 @@ public class AudioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }

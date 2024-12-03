@@ -87,7 +87,16 @@ public class MusicBrainzController {
                     audio.setAlbum(result.getRecordings().get(0).getReleases().get(0).getTitle());
                     audio.setComment(result.getRecordings().get(0).getArtistCredit().get(0).getArtist().getDisambiguation());
                     audio.setComposer(result.getRecordings().get(0).getArtistCredit().get(0).getArtist().getSortName());
-                    audio.setYear(Integer.parseInt(result.getRecordings().get(0).getReleases().get(0).getDate()));
+                    String date = result.getRecordings().get(0).getReleases().get(0).getDate();
+                    if (date != null && !date.isEmpty()) {
+                        // Parsowanie roku z daty w formacie yyyy-MM-dd
+                        String yearStr = date.split("-")[0];
+                        try {
+                            audio.setYear(Integer.parseInt(yearStr));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Nieprawidłowy format roku: " + yearStr);
+                        }
+                    }
                     audio.setTrack(result.getRecordings().get(0).getReleases().get(0).getMedia().get(0).getTrack().get(0).getNumber());
 
                 } else {

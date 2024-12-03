@@ -1,0 +1,67 @@
+.uploadContainer {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #0d0d0d;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    color: white;
+    border: 2px solid #ff00cc;
+    box-shadow: 0px 0px 25px rgba(255, 0, 179, 0.7);
+    font-family: 'Cursive';
+  }
+
+
+  .heading {
+    font-size: 30px;
+    color: #ff00cc;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0px 0px 12px #ff00cc;
+  }
+  
+
+  
+  .title {
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .fileInputContainer {
+    margin: 15px 0;
+  }
+  
+  .fileLabel {
+    display: block;
+    font-size: 16px;
+    color: #ffffff;
+  }
+  
+  .fileInput {
+    margin-top: 5px;
+    padding: 10px;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .progressContainer {
+    margin-top: 20px;
+  }
+  
+  .progressBar {
+    width: 100%;
+    height: 20px;
+  }
+  
+  .errorMessage {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .successMessage {
+    color: green;
+    font-weight: bold;
+  }
+  

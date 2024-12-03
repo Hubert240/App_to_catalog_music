@@ -103,18 +103,14 @@ public class AudioMapperImpl implements AudioMapper{
 
         File tempFile = null;
         try {
-            // Tworzymy tymczasowy plik, aby odczytać metadane
             tempFile = File.createTempFile("audio_", ".mp3");
             createAudioRequest.getAudioFile().transferTo(tempFile);
 
-            // Otwieramy plik MP3
             Mp3File mp3file = new Mp3File(tempFile);
 
-            // Jeśli plik MP3 ma tagi ID3v2, nadpisujemy metadane
             if (mp3file.hasId3v2Tag()) {
                 ID3v2 id3v2Tag = mp3file.getId3v2Tag();
 
-                // Nadpisujemy metadane z requestu
                 id3v2Tag.setTitle(createAudioRequest.getTitle());
                 id3v2Tag.setArtist(createAudioRequest.getArtist());
                 id3v2Tag.setAlbum(createAudioRequest.getAlbum());
@@ -135,23 +131,19 @@ public class AudioMapperImpl implements AudioMapper{
                 id3v2Tag.setUrl(createAudioRequest.getUrl());
                 id3v2Tag.setEncoder(createAudioRequest.getEncoder());
 
-                // Jeśli masz okładkę (cover art), dodaj ją do tagu ID3v2
                 if (coverArtBytes != null) {
                     id3v2Tag.setAlbumImage(coverArtBytes, "image/jpeg");
                 }
 
-                // Zapisujemy zmodyfikowany plik do nowej lokalizacji
                 File modifiedFile = new File(tempFile.getParent(), "modified_audio.mp3");
                 mp3file.save(modifiedFile.getAbsolutePath());
 
-                // Zapisujemy nowy plik jako byte array, który trafi do bazy
                 try (InputStream is = new FileInputStream(modifiedFile)) {
                     audioFileBytes = is.readAllBytes();
                 }
 
             }
 
-            // Tworzymy obiekt Audio
             return new Audio(
                     createAudioRequest.getArtist(),
                     createAudioRequest.getTitle(),
@@ -177,7 +169,6 @@ public class AudioMapperImpl implements AudioMapper{
             e.printStackTrace();
             throw new RuntimeException("Failed to read audio metadata", e);
         } finally {
-            // Usuwamy tymczasowy plik
             if (tempFile != null && tempFile.exists()) {
                 tempFile.delete();
             }
@@ -201,24 +192,24 @@ public class AudioMapperImpl implements AudioMapper{
         }
 
         return new Audio(
-                "Unknown Artist",
-                "Unknown Title",
+                null,
+                null,
                 audioFileBytes,
                 null,
                 user,
-                "Unknown Track",
-                "Unknown Album",
+                null,
+                null,
                 0,
-                "Unknown Genre",
-                "No Comment",
-                "No Lyrics",
-                "Unknown Composer",
-                "Unknown Publisher",
-                "Unknown Original Artist",
-                "Unknown Album Artist",
-                "No Copyright",
-                "No URL",
-                "Unknown Encoder"  
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
         );
     }
 
