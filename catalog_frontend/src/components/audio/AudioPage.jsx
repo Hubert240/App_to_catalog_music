@@ -11,6 +11,7 @@ function AudioPage() {
   const userId = user.id;
 
   const [audio, setAudio] = useState([]);
+  const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState('title');
   const [isAscending, setIsAscending] = useState(true);
   const [filters, setFilters] = useState({
@@ -19,20 +20,30 @@ function AudioPage() {
     year: '',
     title: '',
   });
-
-
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     handleGetAudio();
-  }, [filters]);
+  }, [filters, page]);
 
   const handleGetAudio = async () => {
+    if (loading) return; // Zapobiegamy wielokrotnemu wywoływaniu w tym samym czasie
+
     try {
-      const response = await catalogApi.getAudio(user, userId, filters);
+      setLoading(true);
+      const response = await catalogApi.getAudio(user, userId, filters, page - 1);
+      console.log("Otrzymane dane:", response.data);
       const audioData = response.data;
-      setAudio(audioData);
+
+      if (audioData.length > 0) {
+        setAudio((prevAudio) => [...prevAudio, ...audioData]);
+      } else {
+        console.log('Brak nowych utworów do załadowania.');
+      }
+      setLoading(false);
     } catch (error) {
       handleLogError(error);
+      setLoading(false);
     }
   };
 
@@ -73,7 +84,6 @@ function AudioPage() {
       [name]: value,
     });
   };
-  
 
   const handleResetFilters = () => {
     setFilters({
@@ -82,13 +92,38 @@ function AudioPage() {
       year: '',
       title: '',
     });
+    setAudio([]); // Wyczyszczone dane, aby nie łączyć z poprzednimi wynikami
+    setPage(2); // Resetujemy stronę
   };
+
+  const handleIncreasePage = () => {
+    if (loading) return; // Jeśli dane są w trakcie ładowania, nie zmieniaj strony
+    setPage(prevPage => prevPage + 1); // Zwiększ numer strony
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Jeśli użytkownik przewinie na dół strony i nie jesteśmy w trakcie ładowania
+      if (
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 10 &&
+        !loading
+      ) {
+        handleIncreasePage();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [loading]); // Reagujemy na zmiany w loading
 
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Lista Audio</h2>
 
       <div className={styles.filters}>
+        {/* Filtry */}
         <div className={styles.filterItem}>
           <label htmlFor="title">Tytuł:</label>
           <input
@@ -147,6 +182,7 @@ function AudioPage() {
       </div>
 
       <div className={styles.table}>
+        {/* Nagłówki tabeli */}
         <div className={styles.headerAudio}>
           <div className={styles.columnAudio}>
             Tytuł
@@ -174,6 +210,7 @@ function AudioPage() {
           </div>
         </div>
 
+        {/* Lista audio */}
         {audio.map((audioFile) => (
           <div key={audioFile.id} className={styles.rowAudio}>
             <div className={styles.columnAudio}>{audioFile.title}</div>
@@ -186,12 +223,18 @@ function AudioPage() {
               </Link>
             </div>
             <div className={styles.columnAudio}>
-              <button className={styles.deleteButton} onClick={() => handleDeleteAudio(audioFile.id)}>
+              <button
+                onClick={() => handleDeleteAudio(audioFile.id)}
+                className={styles.deleteButton}
+              >
                 Usuń
               </button>
             </div>
           </div>
         ))}
+
+        {loading && <div>Ładowanie...</div>}
+
       </div>
     </div>
   );

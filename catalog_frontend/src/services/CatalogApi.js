@@ -84,8 +84,9 @@ function uploadAudio(user, audioFile, onProgress) {
 
 
 
-function getAudio(user, userId, filters) {
-  let url = `/api/audio?userId=${userId}`;
+function getAudio(user, userId, filters, page) {
+  let url = `/api/audio?userId=${userId}&page=${page}&size=10`;
+
   if (filters.title) {
     url += `&title=${filters.title}`;
   }
@@ -98,6 +99,8 @@ function getAudio(user, userId, filters) {
   if (filters.year) {
     url += `&year=${filters.year}`;
   }
+
+  console.log("URL wysyłane do backendu: ", url); 
 
   return instance.get(url, {
     headers: { 'Authorization': basicAuth(user) },

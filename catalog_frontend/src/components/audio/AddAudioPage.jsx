@@ -35,6 +35,8 @@ function AddAudioPage() {
   const [coverArt, setCoverArt] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [audioFileName, setAudioFileName] = useState("");
+  const [coverArtFileName, setCoverArtFileName] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,12 +52,19 @@ function AddAudioPage() {
     });
   };
 
+
+  
+  
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    setAudioFileName(selectedFile ? selectedFile.name : "");
   };
 
   const handleCoverArtChange = (e) => {
-    setCoverArt(e.target.files[0]);
+    const selectedCover = e.target.files[0];
+    setCoverArt(selectedCover);
+    setCoverArtFileName(selectedCover ? selectedCover.name : "");
   };
 
   const handleAddAudio = async () => {
@@ -309,7 +318,11 @@ function AddAudioPage() {
         />
         </div>
         <div>
+        <label></label>
+        </div>
+        <div>
         <label htmlFor="audioFile" className={styles.label}>Plik audio</label>
+        <label htmlFor="audioFile" className={styles.customButton}>Wybierz plik audio</label>
         <input
           type="file"
           id="audioFile"
@@ -318,9 +331,12 @@ function AddAudioPage() {
           className={styles.fileInput}
           required
         />
+        {audioFileName && <p className={styles.fileName}>{audioFileName}</p>}
         </div>
+        
         <div>
         <label htmlFor="coverArt" className={styles.label}>Okładka</label>
+        <label htmlFor="coverArt" className={styles.customButton}>Wybierz okładkę</label>
         <input
           type="file"
           id="coverArt"
@@ -328,9 +344,10 @@ function AddAudioPage() {
           onChange={handleCoverArtChange}
           className={styles.fileInput}
         />
+         {coverArtFileName && <p className={styles.fileName}>{coverArtFileName}</p>}
         </div>
-        <div>
-        <button type="button" onClick={handleAddAudio} className={styles.button}>Dodaj</button>
+        <div className={styles.centerDiv}>
+        <button type="button" onClick={handleAddAudio} className={styles.addButton}>Dodaj</button>
         </div>
       </form>
 

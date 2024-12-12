@@ -21,6 +21,4 @@ public class PublicController {
     }
 
 
-    @GetMapping("/numberOfAudio")
-    public Integer getNumberOfAudio(){ return audioService.getAudio().size();}
 }

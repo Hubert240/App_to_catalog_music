@@ -77,6 +77,7 @@ const UploadAudioPage = () => {
         <label htmlFor="audioFolder" className={styles.fileLabel}>
           Wybierz folder z plikami Audio:
         </label>
+        <label htmlFor="audioFolder" className={styles.customButton}>Wybierz folder</label>
         <input
           type="file"
           id="audioFolder"
@@ -92,6 +93,7 @@ const UploadAudioPage = () => {
         <label htmlFor="audioFile" className={styles.fileLabel}>
           Wybierz pojedynczy plik audio:
         </label>
+        <label htmlFor="audioFile" className={styles.customButton}>Wybierz plik audio</label>
         <input
           type="file"
           id="audioFile"

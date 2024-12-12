@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,8 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.images.Artwork;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 import java.io.File;
@@ -64,47 +67,29 @@ public class AudioController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<AudioSummaryDto> getAudioByUserId(
+    public List<AudioSummaryDto> getFilteredAudio(
             @RequestParam Long userId,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "year", required = false) Integer year,
             @RequestParam(value = "artist", required = false) String artist,
-            @RequestParam(value = "album", required = false) String album) {
+            @RequestParam(value = "album", required = false) String album,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        List<Audio> audio;
 
-        if (title != null && year != null && artist != null && album != null) {
-            audio = audioService.getAudioByTitleArtistAlbumYearAndUserId(title, artist, album, year, userId);
-        } else if (title != null && artist != null && album != null) {
-            audio = audioService.getAudioByTitleArtistAlbumAndUserId(title, artist, album, userId);
-        } else if (title != null && year != null && artist != null) {
-            audio = audioService.getAudioByTitleArtistYearAndUserId(title, artist, year, userId);
-        } else if (title != null && year != null && album != null) {
-            audio = audioService.getAudioByTitleAlbumYearAndUserId(title, album, year, userId);
-        } else if (artist != null && album != null && year != null) {
-            audio = audioService.getAudioByArtistAlbumYearAndUserId(artist, album, year, userId);
-        } else if (title != null && artist != null) {
-            audio = audioService.getAudioByTitleArtistAndUserId(title, artist, userId);
-        } else if (title != null && album != null) {
-            audio = audioService.getAudioByTitleAlbumAndUserId(title, album, userId);
-        } else if (title != null && year != null) {
-            audio = audioService.getAudioByTitleYearAndUserId(title, year, userId);
-        } else if (year != null) {
-            audio = audioService.getAudioByYearAndUserId(year, userId);
-        } else if (artist != null) {
-            audio = audioService.getAudioByArtistAndUserId(artist, userId);
-        } else if (album != null) {
-            audio = audioService.getAudioByAlbumAndUserId(album, userId);
-        } else if (title != null) {
-            audio = audioService.getAudioByTitleAndUserId(title, userId);
-        } else {
-            audio = audioService.getAudioByUserId(userId);
-        }
+        Pageable pageable = PageRequest.of(page, size);
 
-        return audio.stream()
+        Page<Audio> audioPage = audioService.getFilteredAudio(title, year, artist, album, userId, pageable);
+
+
+        System.out.println("Fetched " + audioPage.getContent().size() + " audio items for page " + page + " of size " + size);
+
+
+        return audioPage.getContent().stream()
                 .map(audioMapper::toAudioSummaryDto)
                 .collect(Collectors.toList());
     }
+
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/audio/{id}")
