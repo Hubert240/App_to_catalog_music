@@ -103,3 +103,33 @@
     display: flex;
     justify-content: center;
   }
+
+
+  @media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        width: auto;
+    }
+
+    .heading {
+        font-size: 24px;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column; /* Zmiana na jedną kolumnę dla telefonów */
+    }
+
+    .form > div {
+        width: 100%; /* Zapewnienie pełnej szerokości dla elementów formularza */
+    }
+
+    .inputAddPage {
+        padding: 8px;
+    }
+
+    .addButton {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
