@@ -3,10 +3,10 @@
   padding: 40px;
   max-width: 1000px;
   margin: 50px auto;
-  border: 2px solid #ff00cc;
+  border: 2px solid #AB47BC;
   border-radius: 15px;
-  box-shadow: 0px 0px 25px rgba(255, 0, 179, 0.7);
-  font-family: 'Cursive';
+  box-shadow: 0px 0px 25px #AB47BC;
+  font-family: Arial, sans-serif;
   color: #e0f7fa;
   overflow: scroll;
   overflow-y: auto;
@@ -14,10 +14,10 @@
 
 .heading {
   font-size: 3rem;
-  color: #ff00cc;
+  color: #AB47BC;
   text-align: center;
   margin-bottom: 30px;
-  text-shadow: 0px 0px 12px #ff00cc;
+  text-shadow: 0px 0px 12px #AB47BC;
 }
 
 .searchInput {
@@ -42,7 +42,7 @@
   display: grid;
   grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr 2fr;
   padding: 10px;
-  border-bottom: 1px solid #ff00cc;
+  border-bottom: 1px solid #AB47BC;
   align-items: center;
   justify-content: space-between;
   font-weight: bold;
@@ -50,8 +50,8 @@
 
 .headerAudio {
   background-color: #1b1b1b;
-  color: #ff00cc;
-  text-shadow: 0px 0px 6px #ff00cc;
+  color: #AB47BC;
+  text-shadow: 0px 0px 6px #AB47BC;
 }
 
 .columnAudio {
@@ -89,8 +89,8 @@
 
 .detailsButton, .deleteButton {
   background-color: transparent;
-  border: 2px solid #ff00cc;
-  color: #ff00cc;
+  border: 2px solid #AB47BC;
+  color: #AB47BC;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
@@ -102,10 +102,10 @@
 }
 
 .detailsButton:hover {
-  background-color: #ff00cc;
-  border-color: #ff00cc;
+  background-color: #AB47BC;
+  border-color: #AB47BC;
   color: #ffffff;
-  text-shadow: 0px 0px 8px #ff00cc;
+  text-shadow: 0px 0px 8px #AB47BC;
 }
 
 .deleteButton:hover {

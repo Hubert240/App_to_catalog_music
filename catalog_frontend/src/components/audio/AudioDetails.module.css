@@ -1,15 +1,15 @@
 .detailsContainer {
   position: relative;
   background: #0d0d0d;
-  border: 2px solid #ff00cc;
+  border: 2px solid #AB47BC;
   border-radius: 10px;
   padding: 20px;
   max-width: 900px;
   margin: 40px auto;
   margin-top: 50px;
-  box-shadow: 0px 0px 20px rgba(209, 18, 200, 0.7);
+  box-shadow: 0px 0px 20px #AB47BC;
   color: #e0f7fa;
-  font-family: 'Cursive';
+  font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,8 +17,8 @@
 
 .title {
   font-size: 2.5rem;
-  color: #ff00cc;
-  text-shadow: 0px 0px 8px #ff00cc;
+  color: #AB47BC;
+  text-shadow: 0px 0px 8px #AB47BC;
   margin-bottom: 30px;
   text-align: center;
 }
@@ -32,10 +32,10 @@
 }
 
 .labelAudio {
-  color: #ff00cc;
+  color: #AB47BC;
   font-weight: bold;
   margin-right: 10px;
-  text-shadow: 0px 0px 6px #ff00cc;
+  text-shadow: 0px 0px 6px #AB47BC;
 }
 
 .value {
@@ -45,7 +45,7 @@
 .coverArt {
   margin-top: 20px;
   width: 60%;
-  border: 3px solid #ff00cc;
+  border: 3px solid #AB47BC;
   box-shadow: 0px 0px 15px rgba(0, 255, 204, 0.5);
   border-radius: 10px;
 }
@@ -54,7 +54,7 @@
   margin-top: 20px;
   width: 100%;
   padding: 10px;
-  border: 2px solid #ff00cc;
+  border: 2px solid #AB47BC;
   border-radius: 10px;
   box-shadow: 0px 0px 12px rgba(173, 11, 138, 0.7);
 }
@@ -67,7 +67,7 @@ audio {
 
 .audioPlayer audio::-webkit-media-controls-panel {
   background-color: #ffffff;
-  color: #ff00cc;
+  color: #AB47BC;
 }
 
 .backContainer {

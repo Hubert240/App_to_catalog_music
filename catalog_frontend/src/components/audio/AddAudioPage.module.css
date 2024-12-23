@@ -5,16 +5,17 @@
     border-radius: 10px;
     width: 1000px;
     margin: 0 auto;
-    border: 2px solid #ff00cc;
-    box-shadow: 0px 0px 25px rgba(255, 0, 179, 0.7);
+    border: 2px solid #AB47BC;
+    box-shadow: 0px 0px 25px #AB47BC;
+    font-family: Arial, sans-serif;
   }
 
   .heading {
     font-size: 30px;
-    color: #ff00cc;
+    color: #AB47BC;
     text-align: center;
     margin-bottom: 30px;
-    text-shadow: 0px 0px 12px #ff00cc;
+    text-shadow: 0px 0px 12px #AB47BC;
   }
   
 
@@ -117,11 +118,11 @@
 
     .form {
         display: flex;
-        flex-direction: column; /* Zmiana na jedną kolumnę dla telefonów */
+        flex-direction: column;
     }
 
     .form > div {
-        width: 100%; /* Zapewnienie pełnej szerokości dla elementów formularza */
+        width: 100%;
     }
 
     .inputAddPage {
