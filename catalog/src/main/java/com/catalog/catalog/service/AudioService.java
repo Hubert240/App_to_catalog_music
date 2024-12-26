@@ -6,9 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface AudioService {
 
-    /**
-     * Pobiera wszystkie rekordy z paginacją.
-     */
+    Integer getAudioNumber(Long userId);
     Page<Audio> getAudio(Pageable pageable);
 
     /**

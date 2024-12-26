@@ -25,7 +25,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/audio", "/api/audio/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/music", "/music/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority(ADMIN, USER)
-                        .requestMatchers("/api/users", "/api/users/**").hasAuthority(ADMIN)
+                        .requestMatchers(HttpMethod.GET,"/api/users", "/api/users/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers("/public/**", "/auth/**").permitAll()
                         .requestMatchers("/", "/error", "/csrf", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())

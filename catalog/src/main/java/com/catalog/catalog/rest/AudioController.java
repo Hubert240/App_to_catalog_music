@@ -9,6 +9,7 @@ import com.catalog.catalog.service.AudioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,17 +53,12 @@ public class AudioController {
 
     @Autowired
     private AudioRepository audioRepository;
-/*
-    @Operation(security = {@SecurityRequirement(name=BASIC_AUTH_SECURITY_SCHEME)})
-    @GetMapping
-    public List<AudioDto> getAudio(@RequestParam(value ="title", required = false) String title){
-        List<Audio> audio = (title ==null) ? audioService.getAudio() : audioService.getAudioContainingTitle(title);
-        return audio.stream()
-                .map(audioMapper::toAudioDto)
-                .collect(Collectors.toList());
 
-    }
-*/
+    @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
+    @Transactional
+    @GetMapping("/count/{userId}") public ResponseEntity<Integer> getAudioCount(@PathVariable Long userId) {
+        Integer count = audioService.getAudioNumber(userId); return ResponseEntity.ok(count); }
+
 
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})

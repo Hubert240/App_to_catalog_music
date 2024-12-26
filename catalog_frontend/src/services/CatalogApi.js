@@ -34,6 +34,14 @@ function numberOfUsers() {
   return instance.get('/public/numberOfUsers')
 }
 
+function numberOfAudio(user, userID){
+  let url = `/api/audio/count/${userID}`;
+  return instance.get(url, {
+    headers: { 'Authorization': basicAuth(user) },
+  });
+}
+
+
 
 
 function getUsers(user, username) {
@@ -157,15 +165,6 @@ function downloadAudio(user, id) {
     console.error("Błąd pobierania pliku audio:", error);
   });
 }
-
-
-
-
-
-function numberOfAudio() {
-  return instance.get('/public/numberOfAudio')
-}
-
 
 
 const instance = axios.create({

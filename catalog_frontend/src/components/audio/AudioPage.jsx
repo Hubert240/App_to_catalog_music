@@ -14,6 +14,8 @@ function AudioPage() {
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState('title');
   const [isAscending, setIsAscending] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+
   const [filters, setFilters] = useState({
     artist: '',
     album: '',
@@ -39,6 +41,7 @@ function AudioPage() {
         setAudio((prevAudio) => [...prevAudio, ...audioData]);
       } else {
         console.log('Brak nowych utworów do załadowania.');
+        setHasMore(false);
       }
       setLoading(false);
     } catch (error) {
@@ -79,11 +82,18 @@ function AudioPage() {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
+  
     setFilters({
       ...filters,
       [name]: value,
     });
+  
+    // Resetujemy dane i stronę, aby załadować nowe wyniki
+    setAudio([]);
+    setPage(1);
+    setHasMore(true);
   };
+  
 
   const handleResetFilters = () => {
     setFilters({
@@ -93,7 +103,8 @@ function AudioPage() {
       title: '',
     });
     setAudio([]); // Wyczyszczone dane, aby nie łączyć z poprzednimi wynikami
-    setPage(2); // Resetujemy stronę
+    setPage(1); // Resetujemy stronę
+    setHasMore(true);
   };
 
   const handleIncreasePage = () => {
@@ -233,7 +244,8 @@ function AudioPage() {
           </div>
         ))}
 
-        {loading && <div>Ładowanie...</div>}
+        {loading && hasMore && <div>Ładowanie...</div>}
+
 
       </div>
     </div>

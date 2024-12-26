@@ -1,6 +1,7 @@
 package com.catalog.catalog.service;
 
 import com.catalog.catalog.model.Audio;
+import com.catalog.catalog.model.User;
 import com.catalog.catalog.repository.AudioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.catalog.catalog.specification.AudioSpecification;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +23,8 @@ public class AudioServiceImpl implements AudioService {
         return audioRepository.findAll(pageable);
     }
 
+    @Override public Integer getAudioNumber(Long userId)
+    { return audioRepository.countByUserId(userId); }
 
     @Override
     public Page<Audio> getFilteredAudio(String title, Integer year, String artist, String album, Long userId, Pageable pageable) {
