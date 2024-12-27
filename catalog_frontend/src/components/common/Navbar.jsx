@@ -4,6 +4,7 @@ import { useAuth } from '../../services/AuthContext'
 import "./Navbar.module.css"
 import logo from './logo_musixlist.png'
 
+
 function Navbar() {
   const { userIsAuthenticated, userLogout } = useAuth()
 

@@ -72,7 +72,7 @@ const UploadAudioPage = () => {
   return (
     <div className={styles.uploadContainer}>
       <h2 className={styles.heading}>Prześlij Pliki Audio</h2>
-
+      <p>Prześlij plik audio, a metadane zostaną automatycznie odczytane z pliku (jeśli są dostępne).</p>
       <div className={styles.fileInputContainer}>
         <label htmlFor="audioFolder" className={styles.fileLabel}>
           Wybierz folder z plikami Audio:

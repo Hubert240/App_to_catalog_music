@@ -55,7 +55,7 @@ function UserPage() {
       <h2 className={styles.heading}>Twoje dane</h2>
       <p className={styles.email}>Nazwa: {userInfo.username}</p>
       <p className={styles.email}>Email: {userInfo.email}</p>
-      <p className={styles.audioCount}>Liczba  twoich plików audio: {audioCount}</p>
+      <p className={styles.email}>Liczba  twoich plików audio: {audioCount}</p>
     </div>
   );
 }
