@@ -1,95 +1,58 @@
-nav {
+.nav {
+    display: flex;
+    justify-content: space-between; /* Logo po lewej, menu po prawej */
+    align-items: center;
     background: rgba(0, 0, 0, 0.1);
-    padding: 50px;
-    font-size: 20px;
-    font-weight: 600;
-    display: flex;
-    justify-content: center; 
-    position: relative;
+    padding: 10px 20px;
     font-family: Arial, sans-serif;
-}
-
-.link-button {
-    color: white;
-    padding: 10px 20px; 
-    border-radius: 5px;
-    text-decoration: none;
-}
-
-ul {
-    list-style-type: none;
+    font-size: 20px;
+  }
+  
+  .logo {
+    flex-shrink: 0; /* Zapobiega zmniejszaniu logo */
+  }
+  
+  .logoImage {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .menu {
     display: flex;
-    padding: 0;
+    list-style: none;
     margin: 0;
-}
-
-li {
-    margin: 0 15px;
-}
-
-li:first-child {
-    position: absolute;
-    left: 0;
-}
-
-
-li:last-child {
-    position: absolute;
-    right: 0;
-}
-
-li:nth-last-child(2) {
-    position: absolute;
-    right: 8%;
-}
-
-a {
-    color: inherit;
+    padding: 0;
+  }
+  
+  .menu li {
+    margin: 0 10px;
+  }
+  
+  .menu a {
     text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 15px;
-    transition: background-color 0.4s ease;
-}
-
-a:hover {
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .menu a:hover {
     background-color: #252525;
-    color: inherit;
-}
-
-li:first-child a:hover {
-    background-color: transparent; 
-}
-
-a img {
-    height: 60px;
-    vertical-align: middle;
-    margin-top: -15px;
-}
-
-
-@media (max-width: 768px) {
-    nav {
-        padding: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .nav {
+      flex-direction: column; /* Zmiana układu na pionowy */
+      align-items: center;    /* Centrum dla logo i menu */
     }
-
-    ul {
-        flex-direction: column;
-        align-items: center;
+  
+    .menu {
+      flex-direction: column;
+      align-items: center;    /* Centrum dla elementów w menu */
+      width: 100%;            /* Ustawienie pełnej szerokości */
     }
-
-    li {
-        margin: 10px 0;
+  
+    .menu li {
+      margin: 5px 0;          /* Dostosowanie odstępów */
     }
-
-    li:first-child, li:last-child {
-        position: relative;
-    }
-
-    li:nth-last-child(2) {
-        margin-right: 0;
-    }
-
-    a img {
-        height: 50px;
-    }
-}
+  }

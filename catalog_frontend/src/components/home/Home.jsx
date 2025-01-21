@@ -27,7 +27,7 @@ function Home() {
 
   return (
     <div className={styles.homecontainer}>
-      <h1>Witaj w aplikacji MusixList</h1>
+      <h1>Witaj w aplikacji MusiCat</h1>
       {isAuthenticated ? (
         <>
           <p>Aktualnie przechowujesz {audioCount} plików</p>
@@ -48,8 +48,8 @@ function Home() {
         </>
       ) : (
         <>
-          <p>Zaloguj się aby dodawać nowe pliki</p>
-          <p>Jeśli nie masz konta kliknij przycisk rejestracja</p>
+          <p>Zaloguj się, aby dodawać nowe pliki</p>
+          <p>Jeśli nie masz konta, kliknij przycisk rejestracja</p>
         </>
       )}
     </div>

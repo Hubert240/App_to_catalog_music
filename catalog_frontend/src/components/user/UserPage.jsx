@@ -19,6 +19,7 @@ function UserPage() {
           const response = await catalogApi.getUsers(user, user.username);
           setUserData(response.data);
           console.log(response.data)
+          
         } catch (err) {
           console.error('Error fetching user data:', err);
           setError('Nie udało się załadować danych użytkownika.');
@@ -34,6 +35,7 @@ function UserPage() {
          fetchAudioCount();
 
       fetchUserData();
+      
     }
   }, [user, userData]);
 
@@ -49,7 +51,8 @@ function UserPage() {
     return <p>Brak danych do wyświetlenia.</p>;
   }
 
-  const userInfo = userData[0];
+  const userInfo = userData.find((data) => data.id === user.id);
+
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Twoje dane</h2>

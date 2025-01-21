@@ -27,7 +27,7 @@ const SearchDataPage = () => {
       await catalogApi.searchAudioUpload(user, file);
       setSuccess('Plik audio został pomyślnie przesłany!');
     } catch (err) {
-      setError('Wystąpił błąd podczas przesyłania pliku: ' + err.message);
+      setError('Strona CoverArtAchive jest obecnie niedostępna, spróbuj ponownie później.');
       console.error(err);
     }
   };

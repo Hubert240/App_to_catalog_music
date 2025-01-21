@@ -135,7 +135,6 @@ public class AudioController {
                 tempFile = File.createTempFile("audio_", fileExtension);
                 audioFile.transferTo(tempFile);
 
-                // Wczytanie metadanych za pomocą JAudioTagger
                 org.jaudiotagger.audio.AudioFile jaudioFile = org.jaudiotagger.audio.AudioFileIO.read(tempFile);
                 org.jaudiotagger.tag.Tag tag = jaudioFile.getTag();
 
@@ -159,7 +158,6 @@ public class AudioController {
                     audio.setUrl(tag.getFirst(org.jaudiotagger.tag.FieldKey.URL_OFFICIAL_RELEASE_SITE));
                     audio.setEncoder(tag.getFirst(org.jaudiotagger.tag.FieldKey.ENCODER));
 
-                    // Obsługa okładki albumu (cover art)
                     List<org.jaudiotagger.tag.images.Artwork> artworkList = tag.getArtworkList();
                     if (!artworkList.isEmpty()) {
                         org.jaudiotagger.tag.images.Artwork artwork = artworkList.get(0);
@@ -171,7 +169,7 @@ public class AudioController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("Failed to read audio metadata", e);
+                throw new RuntimeException("Nie udało się odczytać metadanych", e);
             } finally {
                 if (tempFile != null && tempFile.exists()) {
                     tempFile.delete();

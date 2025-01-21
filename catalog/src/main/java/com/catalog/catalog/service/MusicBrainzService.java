@@ -36,7 +36,7 @@ public class MusicBrainzService {
         try {
             return objectMapper.readValue(json, RecordingsResponse.class);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse Json");
+            throw new RuntimeException();
         }
     }
 
