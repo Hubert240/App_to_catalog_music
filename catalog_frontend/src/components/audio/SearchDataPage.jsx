@@ -12,7 +12,6 @@ const SearchDataPage = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // Funkcja do obsługi przesyłania pojedynczego pliku
   const handleSingleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file || !file.type.startsWith('audio/')) {
@@ -32,7 +31,6 @@ const SearchDataPage = () => {
     }
   };
 
-  // Funkcja do obsługi przesyłania folderu z plikami
   const handleFolderUpload = async (event) => {
     const files = Array.from(event.target.files);
     const audioFiles = files.filter((file) => file.type.startsWith('audio/'));
@@ -80,7 +78,7 @@ const SearchDataPage = () => {
           webkitdirectory="true"
           directory="true"
           multiple
-          onChange={handleFolderUpload} // Folder przesyłany automatycznie po wybraniu
+          onChange={handleFolderUpload}
           className={styles.fileInput}
           id="audioFolder"
         />
@@ -95,19 +93,17 @@ const SearchDataPage = () => {
           type="file"
           accept="audio/*"
           id="audioFile"
-          onChange={handleSingleFileUpload} // Plik przesyłany automatycznie po wybraniu
+          onChange={handleSingleFileUpload} 
           className={styles.fileInput}
         />
       </div>
 
-      {/* Pasek postępu dla folderu */}
       {uploadedFiles > 0 && (
         <p>
           Przesłano {uploadedFiles} plików. Postęp: {uploadProgress.toFixed(2)}%
         </p>
       )}
 
-      {/* Komunikaty o błędach i sukcesach */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {success && <p style={{ color: 'green' }}>{success}</p>}
     </div>

@@ -6,7 +6,9 @@ import com.catalog.catalog.repository.AudioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.catalog.catalog.specification.AudioSpecification;
 
@@ -28,6 +30,14 @@ public class AudioServiceImpl implements AudioService {
 
     @Override
     public Page<Audio> getFilteredAudio(String title, Integer year, String artist, String album, Long userId, Pageable pageable) {
+        if (pageable.getSort().isUnsorted()) {
+            pageable = PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    Sort.by(Sort.Direction.ASC, "id")
+            );
+        }
+
         return audioRepository.findAll(
                 AudioSpecification.filterByCriteria(title, year, artist, album, userId),
                 pageable

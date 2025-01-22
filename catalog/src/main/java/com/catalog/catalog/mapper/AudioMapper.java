@@ -16,4 +16,6 @@ public interface AudioMapper {
 
     Audio toAudio(CreateAudioRequest createAudioRequest, User user);
     Audio toUploadAudio(UploadAudioRequest uploadAudioRequest,User user);
+
+    Audio toSearchData(UploadAudioRequest uploadAudioRequest, User user);
 }

@@ -70,72 +70,18 @@ public class MusicBrainzController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = {"multipart/form-data"}, path = "/uploadFile")
     public AudioDto uploadSearchAudio(@Valid @ModelAttribute UploadAudioRequest uploadAudioRequest) {
-        Long userId = uploadAudioRequest.getUserId();
 
+        Long userId = uploadAudioRequest.getUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Audio audio = new Audio();
-        MultipartFile audioFile = uploadAudioRequest.getAudioFile();
 
-        if (!audioFile.isEmpty()) {
-            audio = audioMapper.toUploadAudio(uploadAudioRequest, user);
+        Audio audio = audioMapper.toSearchData(uploadAudioRequest, user);
 
-            String name = audioFile.getOriginalFilename();
-            name.replaceAll("\\s+", "");
-            if (name.contains("-")) {
-                name = name.split("\\.")[0];
-                String[] array = name.split("-");
-                String artist = array[0];
-                String title = array[1];
-                RecordingsResponse result = musicBrainzService.getRecordingInfoJson(title, artist);
-
-                if (result != null && result.getRecordings() != null && !result.getRecordings().isEmpty()) {
-                    var recording = result.getRecordings().get(0);
-                    audio.setTitle(recording.getTitle());
-                    audio.setArtist(recording.getArtistCredit().get(0).getArtist().getName());
-                    audio.setAlbum(recording.getReleases().get(0).getTitle());
-                    audio.setComment(recording.getArtistCredit().get(0).getArtist().getDisambiguation());
-                    audio.setComposer(recording.getArtistCredit().get(0).getArtist().getSortName());
-
-                    String date = recording.getReleases().get(0).getDate();
-                    if (date != null && !date.isEmpty()) {
-                        String yearStr = date.split("-")[0];
-                        try {
-                            audio.setYear(Integer.parseInt(yearStr));
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid year format: " + yearStr);
-                        }
-                    }
-
-                    audio.setTrack(recording.getReleases().get(0).getMedia().get(0).getTrack().get(0).getNumber());
-                    String releaseId = recording.getReleases().get(0).getId();
-
-                    if (releaseId != null) {
-                        String coverArtUrl = musicBrainzService.getThumbnail250(releaseId);
-                        if (coverArtUrl != null) {
-                            try {
-                                byte[] coverArtData = downloadImage(coverArtUrl);
-                                audio.setCoverArt(coverArtData);
-                            } catch (Exception e) {
-                                System.out.println("Failed to download cover art: " + e.getMessage());
-                            }
-                        } else {
-                            System.out.println("Cover art URL not available for release ID: " + releaseId);
-                        }
-                    } else {
-                        System.out.println("Release ID not available in recording data.");
-                    }
-                } else {
-                    System.out.println("No recordings found for title: " + title + ", artist: " + artist);
-                }
-            }
-        }
-
-
-        audio.setUser(user);
-        return audioMapper.toAudioDto(audioService.saveAudio(audio));
+        Audio savedAudio = audioService.saveAudio(audio);
+        return audioMapper.toAudioDto(savedAudio);
     }
+
 
     private byte[] downloadImage(String imageUrl) throws Exception {
         try (InputStream inputStream = new URL(imageUrl).openStream()) {
