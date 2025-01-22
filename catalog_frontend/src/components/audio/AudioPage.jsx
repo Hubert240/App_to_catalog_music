@@ -29,7 +29,7 @@ function AudioPage() {
   }, [filters, page]);
 
   const handleGetAudio = async () => {
-    if (loading) return; // Zapobiegamy wielokrotnemu wywoływaniu w tym samym czasie
+    if (loading) return;
 
     try {
       setLoading(true);
@@ -88,7 +88,6 @@ function AudioPage() {
       [name]: value,
     });
   
-    // Resetujemy dane i stronę, aby załadować nowe wyniki
     setAudio([]);
     setPage(1);
     setHasMore(true);
@@ -102,19 +101,19 @@ function AudioPage() {
       year: '',
       title: '',
     });
-    setAudio([]); // Wyczyszczone dane, aby nie łączyć z poprzednimi wynikami
-    setPage(1); // Resetujemy stronę
+    setAudio([]); 
+    setPage(1); 
     setHasMore(true);
   };
 
   const handleIncreasePage = () => {
-    if (loading) return; // Jeśli dane są w trakcie ładowania, nie zmieniaj strony
-    setPage(prevPage => prevPage + 1); // Zwiększ numer strony
+    if (loading) return;
+    setPage(prevPage => prevPage + 1);
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      // Jeśli użytkownik przewinie na dół strony i nie jesteśmy w trakcie ładowania
+ 
       if (
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 10 &&
         !loading
@@ -127,14 +126,13 @@ function AudioPage() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [loading]); // Reagujemy na zmiany w loading
+  }, [loading]);
 
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Lista Audio</h2>
 
       <div className={styles.filters}>
-        {/* Filtry */}
         <div className={styles.filterItem}>
           <label htmlFor="title">Tytuł:</label>
           <input
@@ -193,7 +191,6 @@ function AudioPage() {
       </div>
 
       <div className={styles.table}>
-        {/* Nagłówki tabeli */}
         <div className={styles.headerAudio}>
           <div className={styles.columnAudio}>
             Tytuł
@@ -221,7 +218,7 @@ function AudioPage() {
           </div>
         </div>
 
-        {/* Lista audio */}
+
         {audio.map((audioFile) => (
           <div key={audioFile.id} className={styles.rowAudio}>
             <div className={styles.columnAudio}>{audioFile.title}</div>
